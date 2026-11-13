@@ -1,0 +1,44 @@
+Ms. Kimberly Harris, born 01/11/1979,  
+3540 Market Street, 19104 Philadelphia  
+Outpatient Consultation on 04/21/2028 and 04/23/2028  
+
+Clinical diagnosis:  
+Hashimoto’s thyroiditis.  
+Euthyroid metabolic state under hormone replacement therapy.  
+Anemia of unclear origin.  
+
+Ms. Harris has experienced weakness in both legs as well as the right arm for 5 months, mostly without pain. In addition, she reports recurrent headaches and balance disturbances. Her medical history includes hypothyroidism, which according to the patient is well managed with medication.  
+
+On clinical neurological exam, there are no definite focal deficits. However, there is a pronounced gait ataxia.  
+
+Cranial MRI (without contrast) shows multiple white matter lesions in both hemispheres. These could indicate vasculitis.  
+
+Further investigation with MRI revealed multiple white matter lesions that, given the absence of focal symptoms, have no clinical correlation. The lumbar puncture was unremarkable, especially with regard to signs of active or chronic inflammation. Additional testing (visual evoked potentials, transcranial magnetic stimulation, evoked potentials) was also normal and did not indicate disseminated central nervous system disease. We recommend follow-up MRI in approximately 6 months.  
+Another possible cause of the white matter lesions could be arterial hypertension; the patient reports that her blood pressure readings during regular checks have been normal (120/80). Nevertheless, we recommend continuing regular blood pressure monitoring.  
+
+We informed Ms. Harris that there is currently no need for intervention in the field of neurology. However, her mild anemia does require further evaluation, and so we scheduled an appointment with Professor Rebecca Jenkins in the Internal Medicine Department of this hospital for 04/24/2028.  
+
+Clinical neurological exam: No meningismus. Cranial nerves unremarkable. Mild generalized muscle weakness, no focal pareses, muscle stretch reflexes weak and symmetric, no pyramidal signs. No muscle tenderness. Sensation normal. Coordination: Romberg standing test normal, no ataxia in finger-to-nose testing. No issues with urination reported.  
+
+Visual evoked potentials: Normal on both sides.  
+
+Transcranial magnetic stimulation of arms and legs: Central latencies normal.  
+
+Somatosensory evoked potentials of the median nerve: Peripheral and central latencies normal on both sides.  
+
+Somatosensory evoked potentials of the tibial nerve: Peripheral and central latencies normal on both sides.  
+
+Lumbar CSF puncture: Cell count 3, total protein 188, albumin quotient 2.4, immunoglobulin G index 0.52, oligoclonal bands negative in CSF and serum.  
+
+Laboratory: 04/21/2028 11:35 AM: Prothrombin time (Quick) 98%; International normalized ratio 0.91; Partial thromboplastin time 33 seconds; Creatine kinase 171 units per liter.  
+04/21/2028 2:17 PM: CSF volume 7.0; CSF color before centrifugation pale; CSF color after centrifugation pale; cell count 3 per microliter; puncture site lumbar puncture; CSF pressure – centimeters H2O; erythrocytes –; lymphocytes 92%; monocytes 10%; granulocytes – %; plasma cells – %; activated B-lymphocytes – %; erythro-/siderophages – %; other cells – %; total protein 193 milligrams per liter; albumin quotient 2.7; local immunoglobulin G synthesis 0.000; local immunoglobulin A synthesis 0.000; local immunoglobulin M synthesis 0.000; immunoglobulin G index 0.54; oligoclonal bands in CSF negative; oligoclonal bands in serum negative.  
+04/24/2028 11:56 AM: Leukocytes 6,200 per microliter; erythrocytes 4.1 million per microliter; hemoglobin 12.8 grams per deciliter; hematocrit 38.5%; platelets 256,000 per microliter; iron 151 micrograms per deciliter; ferritin 37 nanograms per milliliter; thyroid-stimulating hormone 1.80 micro-units per milliliter; total cholesterol 162 milligrams per deciliter; total triglycerides 101 milligrams per deciliter.  
+
+Assessment:  
+As the cause of the known hypothyroidism, the combination of findings on ultrasound and significantly increased antithyroid peroxidase antibodies confirm Hashimoto’s thyroiditis. Persistently increased perfusion indicates ongoing thyroid inflammation. With a euthyroid metabolic status, treatment with levothyroxine 125 should be continued unchanged.  
+
+Follow-up tests reveal significant anemia, which requires further evaluation. This may explain her symptoms. Regular thyroid hormone checks are necessary. The goal is a normal basal thyroid-stimulating hormone level. Repeat thyroid ultrasound should be performed in no more than one year.  
+
+Sincerely,  
+
+Associate Professor of Medicine Daniel Rowan

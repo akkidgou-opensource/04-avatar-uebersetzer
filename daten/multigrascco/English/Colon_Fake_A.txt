@@ -1,0 +1,57 @@
+Physician Report dated 08/25/2068
+
+Dear Colleagues,
+
+We are reporting on Mrs. Susan Mitchell, *03/21/2017, inpatient stay 12/12/2066 - 12/23/2066
+
+
+PRIMARY / SECONDARY DIAGNOSES
+Rectal carcinoma (initial diagnosis 07/2063); locally advanced, C20
+Tumor-related anemia (initial diagnosis 09/2063), D63.0
+insulin-dependent diabetes mellitus, E11.9
+chronic renal insufficiency in the strict sense due to diabetic nephropathy, N18.8
+arterial hypertension, I10
+metamizole allergy, Z88.6
+Lasix allergy
+
+Status post placement of port-a-cath Sept. 2063 – removal 11/03/2066
+secondary healing with postoperative hematoseroma/rectovaginal fistula (01-12/2064)
+
+COURSE OF THE TUMOR DISEASE
+Surgeries and Histology:
+diagnostic punch biopsy (03/05/2063)
+Histopathology: adenocarcinoma
+Stage: pN+MXG2 K-RAS wild type
+end colostomy of the sigmoid colon (04/04/2063)
+abdominoperineal resection, hysterectomy, vaginal reconstruction, defect coverage (06/07/2063)
+suspicion of metastases in the right kidney and adrenal gland
+Histopathology: Very minimal residual adenocarcinoma of the colorectal type
+Stage: ypT3cN0(0/14)M0G2R0 Tumor regression grade 3
+Histopathology: uterine fibroids, mild endometriosis
+
+Radiation:
+concurrent radiotherapy/chemotherapy with 5-fluorouracil at Radiation Therapy Center, 64 Gray (10/2063–12/2063); (regional lymph nodes 64 Gray, primary tumor area 80 Gray)
+
+Medical Tumor Therapy:
+pseudoneoadjuvant polychemotherapy with Folfox (07/2063–12/2063); MRI after 6 cycles;
++ Panitumumab (09/2063–11/2063)
+pseudoneoadjuvant polychemotherapy De Gramont + Panitumumab (07/2063–11/2063); partial remission; additional concurrent radiochemotherapy
+Observation from (12/2063–ongoing)
+
+Due to renal insufficiency, the patient received 2000 ml sodium chloride 0.9%
+and 4000 ml orally to increase diuresis.
+Nevertheless, due to elevated creatinine,
+a contrast-enhanced computed tomography could not be performed.
+The radiologist recommends a follow-up exam in 3 months.
+
+TREATMENT RECOMMENDATION
+NovoRapid® 2 units per carbohydrate serving
+Brotaphane® 0-0-0-6 units
+Inegy® 10/20 milligrams 0-0-1
+Toprol XL® 95 milligrams 1/2-1/2-1/2
+Gastrozol® 20 milligrams 1-0-0
+Valsartan 160 milligrams 1-0-0
+Berodual® metered dose inhaler as needed 1–2 puffs
+Advair Diskus® 3x 1 puff
+Indapamide 1 milligram 1-0-1
+Allopurinol 300 milligrams 1-0-0

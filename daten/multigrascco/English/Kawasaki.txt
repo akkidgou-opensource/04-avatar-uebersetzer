@@ -1,0 +1,94 @@
+UCLA Medical Center, Los Angeles
+
+Department and Outpatient Clinic of Pediatric Oncology / Hematology
+
+Center for Integrated Oncology
+
+Director: Professor of Medicine James Connor
+
+Carter, Milo, born on 02/03/2027
+
+Dear Colleague,
+
+We are reporting on the above-named patient.
+
+Diagnosis:
+Ganglioneuroblastoma stage 3 presacral (C47.4).
+
+Current:
+Locoregional recurrence of the known ganglioneuroblastoma.
+
+Intercurrent complications and illnesses since 10/32: Recurrent hemorrhagic urinary tract infection (Pseudomonas), left hydronephrosis, bronchitis.
+
+Therapy:
+
+- First-line treatment
+Core needle biopsy, ventral/rectal.
+Tumor resection (with right ovary resection), incomplete.
+1st cycle chemotherapy (Vincristine/Etoposide/Cisplatin),
+2nd cycle chemotherapy (Vincristine/Cyclophosphamide/Doxorubicin),
+3rd cycle chemotherapy (Etoposide/Carboplatin)
+4th cycle chemotherapy (Vincristine/Cyclophosphamide/Doxorubicin),
+5th cycle chemotherapy (Etoposide/Carboplatin)
+6th cycle chemotherapy (Vincristine/Cyclophosphamide). Rapid induction sequential timetable therapy (so far, 2 cycles),
+
+- Second-line treatment
+Tumor resection.
+Double-J catheter replacement.
+
+Local radiotherapy, 36 Gray. Metronomic chemotherapy,
+1st cycle Cyclophosphamide/Carboplatin/Vincristine/Etoposide
+2nd cycle Cyclophosphamide/Carboplatin/Vincristine
+3rd cycle Cyclophosphamide/Carboplatin/Vincristine/Etoposide
+4th cycle Cyclophosphamide/Carboplatin/Vincristine
+5th cycle Cyclophosphamide/Carboplatin/Vincristine/Etoposide
+6th cycle Cyclophosphamide/Carboplatin/Vincristine
+7th cycle Cyclophosphamide/Carboplatin/Vincristine/Etoposide
+8th cycle Cyclophosphamide/Carboplatin/Vincristine
+9th cycle Cyclophosphamide/Carboplatin/Vincristine/Etoposide
+10th cycle Cyclophosphamide/Carboplatin/Vincristine
+11th cycle Cyclophosphamide/Carboplatin/Vincristine
+12th cycle Cyclophosphamide/Carboplatin/Vincristine
+
+Urinary tract infection therapy, most recently with ciprofloxacin. Pneumocystis jirovecii pneumonia prophylaxis with pentamidine inhalation. Propiverine (Mictonetten).
+Recurrence therapy
+Cycle N8: planned
+
+History:
+For a detailed history, we refer to previous physician letters, most recently from our institution on 10/14/2033. At that time, we already reported suspicion of recurrence of the known ganglioneuroblastoma. On abdominal MRI imaging dated 09/17/2033, a new 1.6 x 1.8 centimeter mass was identified in the left retroperitoneal region alongside the left sympathetic chain. We would like to report on the further staging examinations and planned therapy below.
+
+Clinical findings:
+
+6-year-old boy in good general condition and nutritional status. Heart: regular rate and rhythm. Lungs: bilateral vesicular breath sounds. Abdomen: soft, deep on palpation. No abnormal resistance. No hepatosplenomegaly. No palpable tumor. Development appropriate for age. Peripheral lymph nodes unremarkable.
+
+Lab:
+Lab values from 10/21/2033:
+Leukocytes 3,610 per microliter, hemoglobin 9.6 grams per deciliter, platelets 221,000 per microliter. Electrolytes, protein, albumin, creatinine within normal range. Uric acid, aspartate aminotransferase (AST), alanine aminotransferase (ALT), gamma-glutamyltransferase, bilirubin, lactate dehydrogenase, and lipase within the normal range. C-reactive protein mildly elevated at 5.9 mg/L and blood urea nitrogen at 55 mg/dL.
+
+Tumor markers:
+Neuron-specific enolase from 10/21/2033 mildly elevated at 26.3 micrograms/L.
+
+Urinary catecholamine excretion normal over course: 09/26/2033 with homovanillic acid 0.91-fold and vanillylmandelic acid 0.75-fold the upper limit of normal.
+
+Bone marrow:
+
+Bone marrow examination on 10/09/2033:
+Cytology: no evidence of tumor cells. Immunocytology: no evidence of tumor cells.
+
+Imaging findings:
+
+Meta-iodobenzylguanidine (MIBG) scan dated 10 and 10/11/2033:
+Moderate pathological meta-iodobenzylguanidine uptake in left abdominal region. Written report pending.
+
+Summary and assessment:
+Current MIBG scan shows, in correlation with the suspicious recurrence finding on left-sided retroperitoneal MRI, pathological MIBG uptake. Overall, the findings were interpreted as locoregional recurrence of ganglioneuroblastoma. Bone marrow examinations showed no evidence of bone marrow involvement.
+
+Treatment plan is as follows: After placement of a Broviac catheter, a neoadjuvant chemotherapy cycle N8 (per Neuroblastoma Protocol 2004 High Risk with topotecan, cyclophosphamide, etoposide) is to be administered. This will be followed by tumor biopsy for histological confirmation and evaluation of "druggable targets." Complete tumor resection will most likely not be possible. After a second neuroblastoma cycle, repeat staging studies are planned. If there is a response to therapy, two additional N8 cycles are recommended, followed by high-dose chemotherapy (conditioning with, for example, melphalan, etoposide, carboplatin) with autologous stem cell rescue, possibly in combination with an MIBG therapy. For high-dose therapy, prior collection of autologous stem cells is required (stem cell apheresis, for instance, after 1st block N8). As maintenance therapy, monoclonal antibody therapy (anti-GD2 antibody ch14.18) may be considered.
+
+We will continue to report on the course of treatment and remain sincerely yours,
+
+Professor of Medicine Susan Morgan
+Attending Physician, Pediatric Oncology and Hematology
+
+Doctor of Medicine Danielle Sloane
+Board Certified in Pediatrics and Adolescent Medicine

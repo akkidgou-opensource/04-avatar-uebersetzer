@@ -1,0 +1,100 @@
+Cher confrère, chère consœur,
+
+Nous vous informons à titre définitif au sujet de notre patiente commune Sophie Bernard, qui a été prise en charge du 24/01/2028 au 06/02/2028 dans notre service de soins intensifs.
+
+Diagnostics :
+1. Insuffisance respiratoire sur épanchements pleuraux bilatéraux.
+2. Valvulopathie aortique combinée avec sténose aortique (surface d’ouverture valvulaire : 0,7 cm²).
+3. Valvulopathie mitrale combinée avec sténose mitrale modérée à sévère (surface d’ouverture valvulaire : 0,8-1,3 cm²).
+4. Fonction ventriculaire gauche normale.
+5. Ischémie cérébrale dans la région des noyaux gris centraux à gauche avec remaniements ischémiques diffus anciens.
+6. Suspicion de pneumonie 15/12/2027.
+7. Séquelle d’AVC 2002 (hémiparésie droite) sans résidu.
+8. Hypothyroïdie sur thyroïdite auto-immune.
+9. Diabète sucré avec néphropathie diabétique.
+10. Sepsis à germes Gram négatif (origine pulmonaire ou urinaire).
+11. Insuffisance rénale aiguë.
+
+Thérapeutique :
+23/01/28 : Remplacement valvulaire : remplacement de la valve mitrale par une prothèse biologique, remplacement de la valve aortique par une prothèse biologique 23 mm, temps de clampage 2h30 min, seuil stimulateur ventricule 1,3, oreillette 13. 6 concentrés de globules rouges, 800 ml de sang de circulation extracorporelle, 2 concentrés plaquettaires.
+25/01/28 : Échocardiographie transœsophagienne, sans anomalie. 27/01/28 : Test rapide de thrombopénie induite par l’héparine négatif, échographie pleurale.
+28/01/28 : Thrombopénie induite par l’héparine négative. 31/01/28 : Angio-scanner cérébral. 29/01/28 : Début de l’hémofiltration veno-veineuse continue.
+05/02/28 : Scanner cérébral et scanner corps entier. Anamnèse : Transfert depuis la 3 Sud. Patiente présentant une valvulopathie aortique combinée avec sténose prédominante. Depuis ce soir, état de conscience diminué et dyspnée croissante.
+Ce jour 24/01/28 en raison de l’indication opératoire et après préparation adéquate : intervention chirurgicale, prémédication  
+
+Évolution :
+24/12/2027 Échocardiographie :
+1. Ventricule gauche de taille normale, hypertrophie concentrique avec une bonne fonction ventriculaire gauche préservée.
+2. Valvulopathie mitrale combinée (insuffisance mitrale grade II, sténose mitrale grade II), valvulopathie aortique combinée, flux turbulent à travers la valve aortique, gradient moyen de 20 mmHg (vraisemblablement sous-estimé en raison de la mauvaise échogénicité), insuffisance tricuspide grade I.
+3. Pressions élevées dans la petite circulation. Épanchements pleuraux ponctionnables des deux côtés.
+
+24/12/2027 Avis praticien hospitalier Professeur Jean-Luc Girard : Pression artérielle dans la norme, rythme sinusal ; --> Objectif thérapeutique : bilan hydrique négatif net par mesures conservatrices – début de Toremsemi-perfuseur en surveillant la créatininémie – éviter la pose de drainages pleuraux si possible, privilégier une ponction unique.
+24/12/2027 Épanchement pleural droit ponctionné avec succès dans des conditions stériles, évacuation de 1,2 litre d’épanchement. Amélioration notable de la ventilation, saturation périphérique >90% sous 60% d’oxygène. Perfusion de Torem en cours à 2,1 ; diurèse atteinte d’environ 700 millilitres sous ce traitement.
+Neurologie : Pupilles isocores, réactives à la lumière.
+Pneumologie : diminution du murmure vésiculaire bilatéral, plus marquée à gauche, pas de crépitants humides. Cardiaque : souffle systolique 5/6.
+Abdomen : souple, bruits intestinaux présents.
+Extrémités : œdèmes des jambes discrets bilatéraux.
+
+Conduite à tenir :
+– suivi du bilan hydrique, objectif –500 à –1000 millilitres.
+– surveillance des paramètres de rétention.
+– en cas d’aggravation, nouvelle ponction pleurale.
+– début d’anticoagulation par héparine totale, cible TCA 50-70 secondes. 
+
+Contrôle du TCA 24/12/2027 17:06 Patiente somnolente, réveillée sur stimulation, répond par oui ou non aux questions.
+Ventile sous OptiFlow, saturation en oxygène périphérique >90%. Analyse des gaz du sang après ponction pleurale inchangée.
+PO2 55, PCO2 46, avec sensation subjective d’aggravation de la dyspnée ; augmentation du taux d’oxygène à 80% .
+Pas de fièvre, bonne diurèse, patiente avec bilan négatif sous Toremsemi-perfuseur.
+Neurologie : Pupilles isocores et réactives à la lumière des deux côtés. Cardiaque : bruits du cœur rythmés, souffle systolique 3/6 au 2e espace intercostal droit.
+Pneumologie : deux poumons ventilés, crépitements fins télé-expiratoires à droite en basal, matité à gauche en basal.
+Abdomen : souple, pas de douleur à la palpation, diarrhée ++.
+Extrémités : œdèmes discrets des jambes bilatéraux. Conduite à tenir : contrôle des gaz du sang en cas d’aggravation respiratoire – ponction gauche – si besoin, pression positive continue.
+
+03/02/2028 Modification de l’antibiothérapie :
+* Dans le prélèvement trachéal du 01/02/2028, présence de Klebsiella, résistante à la pipéracilline mais sensible au Tazobac.
+* Paramètres infectieux en hausse, passage à Meropenem 2x1 gramme/jour (hémofiltration).
+04/02/2028 Échographie pleurale / abdominale : estomac dévié vers la droite, devant le foie, ce qui rend l’étude du tronc coeliaque impossible.
+Pulsation visible dans les veines hépatiques, suspicion d’insuffisance cardiaque droite.
+Parenchyme hépatique hypoéchogène.
+Cholestase intra-hépatique, vésicule biliaire distendue + sludge, pas d’épaississement pariétal.
+Flux portal : 18 cm/seconde, index de résistance de l’artère hépatique : 0,86. Signal de flux réduit dans la veine cave inférieure.
+Rein droit sans obstacle, images non contributives pour rein gauche + rate.
+Rétropéritoine non visualisé. Épanchement pleural droit ≈800 ml, non visualisé à gauche. 
+
+04/02/2028
+Chirurgie cardio-thoracique informée de l’épanchement pleural droit de 800 millilitres.
+05/02/2028 Scanner cérébral et scanner corps entier : résultats à suivre après comparaison avec examen antérieur (docteurs Philippe Perrot et Claudine Petit prendront contact avec Xxxxx). Patiente stable sur le plan cardio-pulmonaire au cours du transport et de l’examen. 05/02/2028 Compte-rendu du scanner corps entier (Docteur Julien Masson) : pas de thrombose, pas d’ischémie, abondant liquide libre en intra-abdominal, épaississement pariétal œdémateux au niveau du pylore et du duodénum proximal, pouvant évoquer un ulcère. Épanchements pleuraux : droit (environ 800 ml) > gauche (nettement moins). Sonde d’intubation profonde, orientée vers la carène – possibilité de la retirer de 2 centimètres.
+05/02/2028 Test de thrombopénie induite par l’héparine négatif.
+05/02/2028 Scanner cérébral :
+Nombreuses lésions post-ischémiques anciennes, pas d’ischémie récente, pas d’hémorragie.
+06/02/2028 Relecture du scanner abdominal par Madame Docteure Élodie Mercier (chirurgie générale) : pas d’indication à intervenir.
+Recommandations : microbiologie : Veuillez vous référer à l’annexe pour les résultats microbiologiques.
+Laboratoire : Résultats du laboratoire (période de 3 jours chacun).
+
+Médication actuelle :
+Médicaments (dernière administration dans les 24 dernières heures):
+Diflucan – 400 mg bolus dissous dans 200 ml prêt à l’emploi
+Digimerck – 0,2 mg bolus – 12:09
+Laxoberal gouttes – 20 gouttes par voie orale dans 1 ml prêt à l’emploi par voie orale
+L-Thyroxine – 150 µg par voie orale dans 10 ml d’eau par voie orale
+Méronem – 1 g bolus dans 100 ml de chlorure de sodium à 0,9 %
+Pantozol – 40 mg concentré dans 100 ml de chlorure de sodium à 0,9 %
+Refludan – 1 mg – 11:30
+Suspension pour décontamination sélective digestive – 5 ml par voie orale dans 5 ml prêt à l’emploi par voie orale
+Perfusions (dernières 24 heures, sans rinçage) :
+Intraflow – 9 ml par heure (500 ml)
+Chlorure de sodium à 0,9 % – 9 ml par heure (500 ml)
+Chlorure de sodium à 0,9 % – 11 ml par heure (250 ml, 1000 mg Vancomycine)
+
+Perfusions goutte à goutte : Actrapid insuline humaine – 0,122 unité par kg par heure, 10 ml par heure (50 unités dans 50 ml de chlorure de sodium à 0,9 %)
+Arténolol – 0,122 µg par kg par minute, 6 ml par heure (5 mg dans 50 ml de chlorure de sodium à 0,9 %)
+Hydrocortisone – 0,098 mg par kg par heure, 2 ml par heure (200 mg dans 50 ml de chlorure de sodium à 0,9 %)
+Chlorure de potassium 7,45 % – 10 mEq par heure, 10 ml par heure (60 mEq dans 60 ml prêt à l’emploi)
+Noradrénaline – 0,081 µg par kg par minute, 4 ml par heure (5 mg dans 50 ml prêt à l’emploi)
+
+Nous vous remercions pour la prise en charge rapide de Mme Bernard et nous restons à votre disposition pour tout renseignement complémentaire au numéro de téléphone mentionné ci-dessus. La famille de Mme Bernard a été informée de son transfert dans votre service. (Téléphone : fils Louis Bernard 01 53 29 42 38 Portable 06 78 11 24 33)
+
+Avec nos salutations confraternelles,
+
+Professeur Docteur François Lefèvre      Michel Fontaine                 Maître de conférences agrégé Docteur en médecine Julien Teboul
+Directeur médical           Médecin hospitalier principal                    Interne

@@ -1,0 +1,52 @@
+Definitive Physician’s Report
+
+Linda Bartlett * 08/13/1948
+
+05/27/2021
+
+Diagnoses
+Malignant melanoma, Stage IV (American Joint Committee on Cancer 2009)
+Lipomas
+Chronic hepatitis C
+Arterial hypertension
+02/2023 Primary tumor: nodular melanoma, left buttock, upper quadrant (tumor thickness 3.65 millimeters, mitoses+)
+04/2023 Tumor-free sentinel lymph node, left groin.
+05/2023 - 05/2019 Therapy with Roferon 3 million units 3x/week
+03/2020 Distant metastases (2 solitary lung metastases up to 2.3 centimeters; multiple liver metastases up to 2 centimeters)
+04/2020 - 08/2020 6 cycles of carboplatin and taxol; Response: stable disease
+06/2020, stable disease 08/2020; progressive disease 12/2020 (lungs: stable disease, liver: progressive disease 2.9 centimeters)
+02-04/2021 4 cycles of ipilimumab
+
+Currently:
+Ipilimumab-associated colitis (C43.8)
+
+Chest X-ray
+The heart is slightly enlarged beyond normal with signs of pulmonary venous congestion. Small patchy consolidations perihilar on both sides, consistent with incipient pulmonary edema. Costophrenic angle effusion on the right. The left lateral recess is clear. Pulmonary infiltrates due to congestion cannot be definitively ruled out.
+
+Electrocardiogram
+89 beats per minute, left axis deviation, QRS 174 milliseconds
+
+Next Steps
+Follow-up scheduled for 05/17/2021 at 9:00 AM in the therapy outpatient clinic with Professor Daniel Hoffman.
+Restaging and additional therapy planning are scheduled in about 2 months.
+
+Summary
+Ms. Bartlett was admitted because of severe diarrhea since 04/28/2021 with up to 15 liquid stools per day, at times mixed with bright red blood as well as colicky lower abdominal pain.
+The patient has a melanoma diagnosed at stage IV, for which she most recently received therapy with ipilimumab (4th cycle) at a dose of 3 milligrams per kilogram of body weight on 04/18/2021. Therefore, her symptoms were primarily attributed to ipilimumab-associated colitis.
+The patient received intravenous corticosteroid therapy, starting with Solu-Cortef® 500 milligrams once daily for 3 days, then reduced to 150 milligrams for 3 days. As her stool frequency normalized under this treatment, it was possible to switch to oral administration of Medrol® from 05/07/2021, starting with 60 milligrams once daily. From 05/10/2021, the dose was reduced to 30 milligrams of Medrol once daily. Since her symptoms did not return after switching to oral steroid therapy, the patient was discharged on 05/09/2021 in satisfactory general condition.
+
+Relevant Findings
+
+Labs: Cumulative lab report attached.
+HLA deoxyribonucleic acid typing:
+HLA-A A*01, A*23
+HLA-B B*44
+
+Dermatological Status: Multiple melanocytic, dermoscopically suspicious macules on the entire skin. 
+Left buttock: 12-centimeter long atrophic scar.
+Trunk, upper arm, and both thighs: Several subcutaneous, firm, elastic nodules measuring up to 2 centimeters in diameter (history of lipomas stable in size for 20 years).
+Mucous membranes, venous status, peripheral pulses unremarkable.
+
+With best professional regards,
+
+Professor MD Steven Pierce

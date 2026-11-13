@@ -1,0 +1,103 @@
+Gentile Collega,
+
+Le forniamo un resoconto finale relativo alla nostra comune paziente Amanda Galli, che è stata ricoverata dal 24/01/2028 al 06/02/2028 presso il nostro reparto di terapia intensiva.
+
+Diagnosi:
+1. Insufficienza respiratoria in presenza di versamenti pleurici bilaterali.
+2. Vizio combinato della valvola aortica con stenosi aortica, area di apertura valvolare 0,7.
+3. Vizio combinato mitralico con stenosi di grado moderato-severo (area di apertura valvolare 0,8-1,3).
+4. Funzione ventricolare sinistra normale.
+5. Ischemia cerebrale nell’area dei gangli della base a sinistra con alterazioni ischemiche pregresse diffuse.
+5. Sospetto di polmonite 15/12/2027.
+6. Precedente ictus 2002 (emiparesi destra) senza esiti.
+7. Ipotiroidismo su base di tiroidite autoimmune.
+8. Diabete mellito con nefropatia diabetica.
+9. Sepsi da gram-negativi (focolaio polmonare o urinario).
+10. Insufficienza renale acuta.
+
+Terapia:
+23/01/28: Sostituzione della valvola mitrale con protesi biologica, sostituzione della valvola aortica con protesi biologica n. 23; tempo di clampaggio 2h30min; soglia del pacemaker ventricolo 1,3, atrio 13. Trasfusione di 6 concentrati eritrocitari, 800 ml di sangue da macchina cuore-polmone, 2 concentrati piastrinici.
+25/01/28: Ecocardiografia transesofagea, nella norma. 27/01/28: Test rapido per trombocitopenia indotta da eparina negativo, ecografia pleurica.
+28/01/28: Trombocitopenia indotta da eparina negativa. 31/01/28: Angio-tac cranica. 29/01/28: Inizio emofiltrazione venovenosa continua.
+05/02/28: TC cranica e TC total body.
+Anamnesi: Ricoverata dal reparto 3 Sud. Paziente con vizio combinato dell’aorta e stenosi predominante. Da stasera stato soporoso ingravescente e dispnea.
+Attualmente, 24/01/28, per indicazione operatoria e dopo relativa preparazione: intervento, premedicazione  
+
+Decorso:
+24/12/2027 Ecocardiografia:
+1. Ventricolo sinistro di dimensioni normali, concentrico ipertrofico, con ancora buona funzione sistolica.
+2. Vizio combinato della valvola mitrale (insufficienza mitralica di II grado, stenosi mitralica di II grado), vizio combinato della valvola aortica, flusso turbolento attraverso la aortica, gradiente medio 20 mmHg (probabilmente sottostimato per scarsa finestra acustica). Insufficienza tricuspidale di I grado.
+3. Pressioni elevate nel piccolo circolo. Presenza di versamenti pleurici bilateralmente, suscettibili di puntura.
+
+24/12/2027 Consulto Responsabile di reparto Professore Riccardo De Santis: Pressione arteriosa normotonica, ritmo sinusale; --> Obiettivo terapeutico: importante bilancio negativo mediante misure conservative - inizio di Toremperfusor con attenzione ai valori di creatinina - evitare se possibile drenaggio pleurico continuo, preferendo la puntura unica.
+24/12/2027 Versamento pleurico destro punturato con successo in condizioni sterili e drenaggio di 1,2 litri. Dopo la procedura la paziente respira visibilmente meglio, saturazione periferica ora >90% con ossigeno al 60%. Toremperfusor a 2,1, diuresi di circa 700 ml finora.
+Neurologia: Pupille isocoriche, reagenti alla luce.
+Pneumo: Rumore respiratorio attenuato bilateralmente, più a sinistra che a destra, assenza di rantoli umidi. Cardio: soffio sistolico 5/6.
+Addome: trattabile, peristalsi presente.
+Arti: modesti edemi pretibiali bilaterali.
+
+Procedura:
+- continuare con il bilancio, obiettivo -500 / -1000 millilitri
+- monitorare i parametri di ritenzione
+- se peggioramento, nuova puntura pleurica
+- inizio anticoagulazione piena con eparina, obiettivo tempo di tromboplastina parziale 50-70 secondi; 
+
+Controllo tempo di tromboplastina parziale 24/12/2027 17:06 Paziente soporosa, risvegliabile, risponde sì o no alle domande.
+Respira con OptiFlow, saturazione periferica >90%.
+Emogasanalisi dopo la paracentesi pleurica invariata.
+Pressione parziale di ossigeno 55, pressione parziale di anidride carbonica 46, con dispnea soggettiva ingravescente. Incremento ossigeno al 80%.
+Afebbrile, buona diuresi, bilancio negativo con Toremperfusor.
+Neurologia: Pupille isocoriche e reagenti alla luce bilateralmente. Cardio: Toni ritmici, soffio 3/6 sistolico, II spazio intercostale destro.
+Pneumo: Ventilato bilateralmente, crepitii espiratori terminali basalmente a destra, attenuazione a sinistra.
+Addome: trattabile, non dolente, diarrea ++.
+Arti: minimi edemi pretibiali bilateralmente. Procedura: Controllo emogas in caso di peggioramento respiratorio - puntura a sinistra - eventualmente pressione positiva continua nelle vie aeree.
+
+03/02/2028 Cambio terapia antibiotica:
+* Nel secreto tracheale del 01/02/2028 Klebsiella resistente a Piperacillina, ma non a Tazobactam.
+* Visto l’aumento degli indici infettivi, switch a Meropenem 2x1 grammi/die (emofiltrazione).
+04/02/2028 Ecografia pleura/addome: stomaco che si estende fino al davanti del fegato a destra, per cui non valutabile il tronco celiaco.
+Pulsazione nelle vene epatiche, sospetto insufficienza cardiaca destra.
+Parenchima epatico ipoecogeno.
+Colestasi intraepatica, colecisti piena + fango biliare, parete non ispessita.
+Flusso portale: 18 cm/sec, indice di resistenza dell’arteria epatica: 0,86. Segnale di flusso ridotto nella vena cava inferiore.
+Rene destro senza stasi urinaria, rene sinistro + milza non visualizzabili.
+Retroperitoneo non visualizzabile. Versamento pleurico destro circa 800 ml, pleura sinistra non valutabile. 
+
+04/02/2028
+Chirurgia cardiovascolare informata del versamento pleurico destro di 800 ml.
+05/02/2028 TC cranica e TC total body: risultati disponibili dopo confronto con esami precedenti (Dottori Francesca Riva e Luca Battaglia si metteranno in contatto con Xxxxx). Paziente stabile sul piano cardiopolmonare durante trasporto ed esame. 05/02/2028 Referto TC total body (Dott. Giorgio Locatelli): nessuna trombosi, nessuna ischemia, molta falda liquida libera addominale, ispessimento edematoso della parete nel distretto pilorico e del duodeno prossimale -> possibile ulcera. Versamenti pleurici: destro (circa 800 ml) > sinistro (molto meno). Tubo endotracheale profondo oltre la carena, retrazione possibile di 2 cm.
+05/02/2028 Test trombocitopenia indotta da eparina negativo.
+05/02/2028 Referto TC cranio:
+Numerose vecchie lesioni post-ischemiche, nessuna nuova ischemia, assenza di sanguinamento.
+06/02/2028 Revisione della TC addome dalla Dott.ssa Dott.ssa Paola Montanari (Chirurgia generale): non necessario alcun intervento.
+Raccomandazioni: Microbiologia: I dati microbiologici sono disponibili in allegato.
+Laboratorio: Risultati di laboratorio (periodo ogni 3 giorni)
+
+Terapia attuale:
+Farmaci (ultima somministrazione nelle ultime 24 ore):
+Diflucan - 400 mg in bolo, disciolti in 200 ml già pronto.
+Digimerck - 0,2 mg bolo - 12:09
+Laxoberal gocce - 20 gocce per os, in 1 ml già pronto per os
+L-Tiroxina - 150 mcg per os in 10 ml acqua per os
+Meropenem - 1 g in bolo in 100 ml di sodio cloruro 0,9%
+Pantozol - 40 mg concentrato in 100 ml di sodio cloruro 0,9%
+Refludan - 1 mg - 11:30
+Sospensione per decontaminazione selettiva intestinale - 5 ml per os, in 5 ml già pronto per os
+Infusioni (ultime 24 ore, senza lavaggi):
+Intraflow - 9,0 ml/h (500 ml)
+Sodio cloruro 0,9% - 9,0 ml/h (500 ml)
+Sodio cloruro 0,9% - 11,0 ml/h (250 ml, 1000 mg Vancomicina)
+
+Infusioni a goccia: Actrapid insulina umana - 0,122 unità/kg/h, 10,0 ml/h (50 unità in 50 ml di sodio cloruro 0,9%)
+Arterenolo - 0,122 mcg/kg/min, 6,0 ml/h (5 mg in 50 ml sodio cloruro 0,9%)
+Idrocortisone - 0,098 mg/kg/h, 2,0 ml/h (200 mg in 50 ml sodio cloruro 0,9%)
+Cloruro di potassio 7,45% - 10 mEq/h, 10,0 ml/h (60 mEq in 60 ml già pronto)
+Suprarenina - 0,081 mcg/kg/min, 4,0 ml/h (5 mg in 50 ml già pronto)
+
+
+La ringraziamo per la tempestiva presa in carico della Sig.ra Galli e restiamo disponibili per ulteriori informazioni al numero telefonico sopra indicato. Abbiamo avvisato i familiari della Sig.ra Galli riguardo al trasferimento presso la vostra struttura. (Telefono: figlio Gianluca Galli 055 7190238 Cell. 349-8205674)
+
+Cordiali e collegiali saluti
+
+Prof. Dott. Giuseppe Fabbri      Marco D’Angelo                 Ricercatore Medico Dott. Antonio Sarti
+Direttore sanitario           Responsabile di reparto                          Medico assistente

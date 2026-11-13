@@ -1,0 +1,45 @@
+Madame Brigitte Leblanc, née le 11/01/1979,  
+17 rue Robert-Koch, 13004 Marseille  
+Consultation ambulatoire les 21 et 23/04/2028
+
+Diagnostic clinique :  
+Thyroïdite de Hashimoto.  
+État métabolique euthyroïdien sous traitement hormonal substitutif.  
+Anémie d'étiologie indéterminée.
+
+Chez Madame Leblanc, une faiblesse des deux jambes, ainsi que du bras droit, est présente depuis 5 mois, en grande partie sans douleurs. Elle se plaint également de céphalées récurrentes et de troubles de l’équilibre. Ses antécédents médicaux font état d’une hypothyroïdie, mais selon ses dires, elle serait bien contrôlée par le traitement.
+
+L’examen clinique neurologique ne retrouve pas de déficit focal circonscrit. Cependant, on note une ataxie de la marche prononcée.
+
+L’imagerie par résonance magnétique crânienne (sans injection de produit de contraste) montre de multiples lésions de la substance blanche dans les deux hémisphères cérébraux. Ces images pourraient évoquer une vascularite.
+
+Les examens complémentaires ont révélé en IRM plusieurs lésions de la substance blanche, qui, en l'absence de symptômes focaux, n’ont pas de traduction clinique. La ponction lombaire était normale, en particulier il n’a pas été retrouvé de signes d’inflammation active ou chronique. Les examens complémentaires étaient également sans particularité (potentiels évoqués visuels, stimulation magnétique transcrânienne, potentiels évoqués somesthésiques), sans argument pour une maladie centrale disséminée. Nous recommandons un contrôle de l'IRM dans environ 6 mois.
+Une autre cause possible des lésions de la substance blanche serait une hypertension artérielle, mais la patiente rapporte que les mesures de la pression artérielle lors de contrôles réguliers étaient normales (120/80). Nous conseillons malgré tout de poursuivre un suivi régulier de la pression artérielle.
+
+Nous avons informé Madame Leblanc qu’aucune intervention immédiate n’est nécessaire sur le plan neurologique pour le moment. Toutefois, l'anémie légère doit faire l'objet d'examens complémentaires, c’est pourquoi un rendez-vous a été pris auprès de Professeur Thierry Marchand du service Médecine interne de cet établissement pour le 24/04/2028.
+
+Examen clinique neurologique : Pas de raideur méningée. Nerfs crâniens normaux. Faiblesse musculaire diffuse modérée, pas de paralysie focale, réflexes ostéotendineux faibles et symétriques, pas de signe pyramidal. Pas de douleurs musculaires. Sensibilité normale. Coordination : épreuve de Romberg négative, pas d’ataxie lors des manœuvres doigt-nez. Sur le plan des antécédents, miction normale.
+
+Potentiels évoqués visuels : Normaux des deux côtés.
+
+Stimulation magnétique transcrânienne des bras et jambes : latences centrales non pathologiques.
+
+Potentiels évoqués somesthésiques du nerf médian : latences périphériques et centrales normales des deux côtés.
+
+Potentiels évoqués somesthésiques du nerf tibial : latences périphériques et centrales normales des deux côtés.
+
+Ponction lombaire : numération cellulaire à 3, protéine totale 188, quotient albumine 2,4, index IgG 0,52, pas de bandes oligoclonales dans le LCR ni dans le sérum.
+
+Laboratoire : 21/04/2028 11h35 : Quick 98 % ; Ratio international normalisé 0,91 ; Temps de thromboplastine partielle 33 secondes ; Créatine kinase 171 unités/L ;
+21/04/2028 14h17 : Quantité de LCR 7,0 ; Couleur du LCR avant centrifugation : pâle ; après centrifugation : pâle ; numération cellulaire 3/µL ; site de ponction lombaire ; pression du LCR - cm H₂O ; érythrocytes - ; lymphocytes 92 % ; monocytes 10 % ; granulocytes - % ; plasmocytes - % ; lymphocytes B activés - % ; érythro-/sidérophages - % ; autres cellules - % ; protéine totale 193 mg/L ; quotient albumine 2,7 ; synthèse locale des IgG 0,000 ; synthèse locale des IgA 0,000 ; synthèse locale des IgM 0,000 ; index IgG 0,54 ; bandes oligoclonales absentes dans le LCR et le sérum.
+24/04/2028 11h56 : leucocytes 6,2 milliers/µL ; érythrocytes 4,1 millions/µL ; hémoglobine 12,8 g/dL ; hématocrite 38,5 % ;
+thrombocytes 256 milliers/µL ; fer 151 µg/dL ; ferritine 37 ng/mL ; hormone thyréotrope 1,80 µUI/mL ; cholestérol total 162 mg/dL ; triglycérides totaux 101 mg/dL.
+
+Évaluation :
+L’étiologie de l’hypothyroïdie connue apparaît, au vu de l’échographie et des taux élevés d’anticorps anti-thyroperoxydase, compatible avec une thyroïdite de Hashimoto. L’hyperperfusion toujours présente suggère une inflammation thyroïdienne encore active. Tant que l’état métabolique reste euthyroïdien, le traitement par Lévothyroxine 125 doit être poursuivi sans modification.
+
+Les bilans de suivi montrent une anémie notable, à explorer davantage pour en déterminer la cause. Cela pourrait expliquer la symptomatologie observée. Un contrôle régulier des hormones thyroïdiennes est nécessaire. L’objectif est un taux normal de l’hormone thyréotrope basale. Une échographie thyroïdienne devrait être renouvelée dans au maximum un an.
+
+Bien cordialement,
+
+Maître de conférences et docteur en médecine Damien Girard

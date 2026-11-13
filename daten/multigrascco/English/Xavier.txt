@@ -1,0 +1,102 @@
+Stephen Collins born 01/15/1940,
+
+Dear Colleague,
+
+We are writing to update you regarding the above-named patient, who was admitted for inpatient care at our facility from July 1 to July 21, 2022.
+
+Diagnoses:	
+- Moderately differentiated rectal carcinoma, initial diagnosis 12/17 – tumor stage 3, lymph node stage 1, metastasis stage 0, grade 2 (human epidermal growth factor receptor 2 neu receptor negative)
+- Abdominoperineal resection of the rectum and creation of an end colostomy 12/17
+- Re-laparotomy and adhesiolysis due to early adhesive ileus 12/17
+- Multiple liver metastases, initial diagnosis 01/17
+- 14 cycles of Raltitrexed 01/17-10/18
+- Resection of liver metastases 11/18
+- Left lobectomy, segmental resection of segments VI and VIII
+- Adjuvant 5-fluorouracil maintenance therapy 01/18-06/19
+- 5-fluorouracil plus oxaliplatin (leucovorin, 5-fluorouracil, oxaliplatin) 06/19-09/19 => partial remission
+- Recurrence of liver metastases during therapy break 09/20
+- Resection of liver metastases 09/20 (segmentectomy IV and VIII)
+- Adjuvant chemotherapy irinotecan plus 5-fluorouracil/leucovorin from 11/20, a total of 4 cycles through 03/21
+- Subsequent liver radiation therapy 04/2021-05/2021
+- Thymophysin 50 milligrams per day 09/29-10/02/21 and 10/05-10/10/21
+- Newly detected liver metastases (positron emission tomography 07/29/2021)
+- Chemotherapy (protocol number: 099984-0163) irinotecan (80 mg/m²), 5-fluorouracil (2000 mg/m²), leucovorin (500 mg/m²), 3 cycles: 08/18/21 - 01/20/22; since 09/20/21 (cycles 2 and 3), reduced dose by 20% due to recurring neutropenia
+- Suspected pulmonary lesions on chest CT 01/21
+- Switched chemotherapy due to tumor progression (pulmonary lesions)
+- Gemcitabine 1000 mg/m² on days 1, 8, and 15; repeat on day 28, 01/27/2021 through 02/10/2022 (1000 mg/m²), on 02/10/2022 at a reduced dose of 750 mg/m² due to neutropenia
+- Switched chemotherapy to gemcitabine/capecitabine due to progression (carcinoembryonic antigen increase)
+- Gemzar* (gemcitabine) 1000 mg/m²: days 1 and 8, repeat on day 21; Gemzar started at 750 mg/m² due to patient’s neutropenia
+- Xeloda (capecitabine) 1300 mg/m²/day = capecitabine 2500 mg orally; days 1–14, break days 15–21; 3 cycles: 02/25/22 - 04/16/22
+- Switched chemotherapy to mitomycin C/5-fluorouracil due to progression (carcinoembryonic antigen, CT chest)
+- Mitomycin C 10 mg/m² = 18 mg, day 1
+- 5-fluorouracil 600 mg/m² = 1128 mg days 1, 8, 29, 36
+- 3 cycles 05/01 - 06/26/2022
+
+Remission status: Tumor progression despite various therapy protocols since 07/21
+
+Additional Diagnoses:
+- Status post left port implantation 01/19
+- Status post follicular thyroid carcinoma, pathological tumor stage 2a, lymph node stage 0, metastasis stage 0, grade 1
+- Right hemithyroidectomy 10/14
+- Completion thyroidectomy 11/14
+- Radioiodine therapy 12/14
+- Substitution therapy (current: euthyroid state)
+- Recurrent, intermittent atrial fibrillation with rapid ventricular response, last noted 07/21/22
+- First degree atrioventricular block
+- Status post recurrent pulmonary embolism (04/16 and 11/18)
+
+Current treatment status:
+
+- Thalidomide 200 mg per day since 05/27/2022
+- Initiation of folinic acid, 5-fluorouracil, oxaliplatin (oxaliplatin 100 mg/m²; 5-fluorouracil 2400 mg/m² over 48 hours, bolus 400 mg/m²; 
+- Calcium folinate 400 mg/m² days 1 and 15, repeat on day 29) as of 07/21/2022
+
+Tumor markers for follow-up: Carcinoembryonic antigen, CT chest
+
+Karnofsky Index: 100%
+
+Current: Initiating chemotherapy with the folinic acid, 5-fluorouracil, oxaliplatin protocol
+
+Interim Medical History:
+Mr. Collins reports progressively worsening shortness of breath for the past 2 days, especially with exertion. During the day, he often feels tired without his usual stamina. His weight has increased to 192 pounds. In the evenings, he experiences leg edema. Occasionally, especially over the past two days, he has developed a cough with yellowish sputum.
+Two days ago, Mr. Collins started taking nifedipine at a dose of 3 x 20 mg per day.
+
+Additional Studies:
+Laboratory (07/21/22): Leukocytes 6,200/microL; erythrocytes 4.08 million/microL; hemoglobin 13.1 g/dL;
+hematocrit 36.1%; mean corpuscular volume 88.5 fL; mean corpuscular hemoglobin 32.1 pg; mean corpuscular hemoglobin concentration 36.3 g/dL; platelets 180,000/microL;
+potassium 3.2 mmol/L; sodium 137 mmol/L; calcium 2.06 mmol/L; urea 47 mg/dL; serum creatinine
+0.9 mg/dL; alkaline phosphatase 117 U/L; gamma-glutamyltransferase 42 U/L; carcinoembryonic antigen (Elecsys) 216.7 ng/mL;
+Chest CT (07/07/2022): Compared to the prior imaging from 03/15/2021, there is an
+increase in the size of the mediastinal lymph node metastases (now up to 3.8 cm
+in sagittal diameter) as well as an increase in the size of the known pulmonary metastases. In addition to the
+previously identified liver lesions, two new metastases were detected
+in the liver parenchyma.
+
+Summary and Clinical Course:
+Mr. Collins presented at the start of combination chemotherapy with oxaliplatin and 5-fluorouracil. He
+reported shortness of breath on exertion over the past 2 days. The cause proved to be
+atrial fibrillation with absolute arrhythmia and a heart rate of 100–120 bpm. During his short inpatient
+stay, cardioversion was successfully achieved using 100 mg flecainide by mouth under monitor observation.
+Restoration of rhythm (post-cardioversion heart rate of 60 bpm) resulted in rapid subjective
+improvement.
+On 07/07/2022, an interim restaging following two cycles of combination chemotherapy mitomycin/5-
+fluorouracil was performed. There was progression of findings. Review of the medical records shows
+that from June to November 2019 treatment with oxaliplatin/5-fluorouracil was previously successful for
+liver metastases. Hoping to replicate this benefit, a renewed attempt with this combination
+is planned.
+Alpha-fetoprotein decreased from 276 on 07/02/2022 to current 216.7 ng/mL (07/21/22).
+This may be attributed to the effect of mitomycin/5-fluorouracil combination therapy or could be
+unrelated. Continuation of chemotherapy is planned for Wednesday, 08/05/2022.
+Thalidomide was reduced to 100 mg in the evening.
+Should you have further questions, please do not hesitate to contact us at the number listed above.
+
+Therapy Recommendations:
+Tambocor 100 mg	1-0-1
+Aspirin 100 mg	1-0-0
+Levothyroxine 100 mcg	1-0-0
+Aquaphor 10 mg   1-0-0
+Thalidomide 100 mg	0-0-1
+Adalat 20 mg	1-1-1
+
+Signed, Professor MD Benjamin Harris
+Chief Attending Physician
