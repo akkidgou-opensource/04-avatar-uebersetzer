@@ -30,7 +30,7 @@ Lege für diesen Ordner ein neues öffentliches Repository in meinem GitHub-Kont
 **Fertig, wenn:** ihr den Link im Browser öffnen könnt und eure Dateien dort seht.
 
 ## Schritt 3 · Zwischenstände hochladen
-Am besten nach jedem Block im Spickzettel:
+Am besten nach jedem größeren Arbeitsschritt:
 ```
 Sichere den aktuellen Stand und lade ihn zu GitHub hoch. Beschreibe in einem Satz, was sich seit dem letzten Mal geändert hat. Prüfe vorher, dass keine Schlüssel oder .env-Dateien dabei sind.
 ```

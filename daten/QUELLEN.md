@@ -18,7 +18,7 @@ Die Ordner in `multigrascco/` tragen die englischen Sprachnamen des Datensatzes 
 ## Avatar-Bausteine (Open Source)
 | Baustein | Was er kann | Lizenz | Aufwand |
 |---|---|---|---|
-| Sprachausgabe des Browsers (`speechSynthesis`) | Liest Text in vielen Sprachen vor, ohne Schlüssel und ohne Installation | im Browser eingebaut | gering, im Spickzettel Block 5 |
+| Sprachausgabe des Browsers (`speechSynthesis`) | Liest Text in vielen Sprachen vor, ohne Schlüssel und ohne Installation | im Browser eingebaut | gering |
 | [TalkingHead](https://github.com/met4citizen/TalkingHead) | 3D-Avatar im Browser, der in Echtzeit spricht und die Lippen bewegt | MIT | mittel bis hoch |
 | [HeadTTS](https://github.com/met4citizen/HeadTTS) | Freie Sprachausgabe mit Zeitmarken für die Lippenbewegung, läuft im Browser oder lokal | siehe Projektseite | mittel |
 | [HeadAudio](https://github.com/met4citizen/HeadAudio) | Erkennt Mundbewegungen direkt aus dem Ton | MIT | mittel |

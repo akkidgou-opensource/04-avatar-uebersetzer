@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fbf6ee">
+<title>Avatar-Übersetzer</title>
+<style nonce="__NONCE__">
+  :root {
+    --creme: #fbf6ee; --creme-2: #f4ece0;
+    --himmel: #bcdcf2; --himmel-tief: #5e9cc9;
+    --salbei: #c3dbc6; --salbei-tief: #5f8f6b;
+    --pfirsich: #f8cdb4; --koralle: #ef8a6c; --koralle-tief: #c95a3c;
+    --text: #22303b; --text-2: #4c5a66;
+    --rot: #b3261e; --gruen: #2f6b40;
+    --glas: rgba(255,255,255,.42); --glas-stark: rgba(255,255,255,.72);
+    --glas-rand: rgba(255,255,255,.65);
+    --schatten: 0 10px 30px rgba(34,48,59,.12), 0 2px 6px rgba(34,48,59,.06);
+    --hinweis-h: 40px;
+    --rund: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; min-height: 100dvh; color: var(--text);
+    font: 17px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--creme);
+    background-image:
+      radial-gradient(60vmax 50vmax at 10% 5%, rgba(188,220,242,.85), transparent 60%),
+      radial-gradient(55vmax 45vmax at 95% 25%, rgba(248,205,180,.8), transparent 60%),
+      radial-gradient(60vmax 50vmax at 30% 100%, rgba(195,219,198,.85), transparent 60%);
+    background-attachment: fixed;
+  }
+  body.im-gespraech { overflow: hidden; }
+  [hidden] { display: none !important; }
+  h1, h2, h3 { font-family: var(--rund); letter-spacing: -.01em; }
+  a { color: var(--himmel-tief); }
+
+  /* ---------- Glas ---------- */
+  .glas {
+    background: var(--glas);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--glas-rand);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.85), inset 0 -1px 0 rgba(255,255,255,.2), var(--schatten);
+  }
+  .glas.stark { background: var(--glas-stark); }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glas { background: rgba(255,255,255,.9); }
+    .glas.stark { background: rgba(255,255,255,.96); }
+  }
+
+  /* ---------- Pflicht-Hinweis ---------- */
+  .prototyp {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    padding: calc(6px + env(safe-area-inset-top)) 16px 6px;
+    text-align: center; font-size: 13px; font-weight: 600; line-height: 1.35;
+    color: var(--text);
+    border-width: 0 0 1px; border-radius: 0;
+    box-shadow: inset 0 -1px 0 rgba(255,255,255,.5), 0 4px 16px rgba(34,48,59,.06);
+  }
+  .prototyp::before {
+    content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--koralle); margin-right: 8px; vertical-align: 1px;
+  }
+
+  /* ---------- Allgemein ---------- */
+  .seite {
+    max-width: 960px; margin: 0 auto;
+    padding: calc(var(--hinweis-h) + 20px) 16px calc(28px + env(safe-area-inset-bottom));
+  }
+  .karte { border-radius: 28px; padding: 24px 20px; }
+  label { display: block; font-weight: 600; margin: 14px 0 6px; }
+  input[type=text], input[type=password], select, textarea {
+    width: 100%; font: inherit; padding: 13px 14px; color: var(--text);
+    border: 1px solid rgba(34,48,59,.14); border-radius: 16px; background: rgba(255,255,255,.8);
+  }
+  textarea { min-height: 160px; resize: vertical; }
+  input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, .datei-knopf:focus-within, summary:focus-visible {
+    outline: 3px solid var(--himmel-tief); outline-offset: 2px;
+  }
+  .haken { display: flex; gap: 12px; align-items: flex-start; font-weight: 500; margin: 16px 0; }
+  .haken input { width: 24px; height: 24px; margin: 2px 0 0; flex: none; accent-color: var(--koralle-tief); }
+
+  button, .datei-knopf {
+    font: inherit; font-weight: 600; min-height: 50px; padding: 0 22px; border-radius: 999px;
+    border: 0; cursor: pointer; color: var(--text); background: var(--koralle);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.45), 0 6px 16px rgba(201,90,60,.25);
+    transition: transform .15s ease, box-shadow .2s ease, background-color .2s ease, opacity .2s ease;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  button:active:not(:disabled) { transform: scale(.97); }
+  button.zweit, .datei-knopf {
+    background: rgba(255,255,255,.75); color: var(--text);
+    border: 1px solid rgba(34,48,59,.12); box-shadow: inset 0 1px 0 #fff, 0 2px 8px rgba(34,48,59,.06);
+  }
+  button.himmel { background: var(--himmel); box-shadow: inset 0 1px 0 rgba(255,255,255,.6), 0 6px 16px rgba(94,156,201,.25); }
+  button.gefahr { background: #fde4df; color: var(--rot); box-shadow: none; }
+  button.klein { min-height: 44px; padding: 0 16px; font-size: 15px; }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  .breit { width: 100%; }
+  .knopf-zeile { margin: 16px 0 0; display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .meldung { margin-top: 12px; font-weight: 600; }
+  .meldung:empty { display: none; }
+  .meldung.fehler { color: var(--rot); } .meldung.ok { color: var(--gruen); }
+  .leise { color: var(--text-2); font-size: 14px; }
+
+  .hinweis-box {
+    border-radius: 20px; padding: 14px 16px; font-size: 15px;
+    background: rgba(248,205,180,.45); border: 1px solid rgba(239,138,108,.45);
+  }
+  .hinweis-box strong { display: block; margin-bottom: 4px; font-size: 16px; }
+  .hinweis-box ul { margin: 6px 0 0; padding-left: 20px; }
+
+  .vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  svg.sym { width: 24px; height: 24px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ---------- Anmeldung ---------- */
+  #ansicht-login .seite { max-width: 460px; min-height: 100dvh; display: flex; flex-direction: column; justify-content: center; }
+  .logo {
+    width: 64px; height: 64px; border-radius: 22px; margin: 0 auto 12px; display: grid; place-items: center;
+    background: linear-gradient(140deg, var(--himmel), var(--salbei) 55%, var(--pfirsich));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 8px 20px rgba(94,156,201,.25);
+  }
+  .logo svg { width: 34px; height: 34px; stroke: var(--text); }
+  .login-titel { text-align: center; margin: 0; font-size: 28px; }
+  .login-unter { text-align: center; margin: 4px 0 8px; color: var(--text-2); }
+
+  /* ---------- Avatar-Auswahl ---------- */
+  .kopfzeile { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+  .kopfzeile .gruss { margin: 0; font-size: 16px; color: var(--text-2); font-weight: 600; }
+  .auswahl-titel { font-size: clamp(28px, 7vw, 38px); line-height: 1.15; margin: 4px 0 6px; }
+  .auswahl-unter { margin: 0 0 18px; color: var(--text-2); }
+  .avatar-raster { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 16px; }
+  .avatar-karte {
+    display: flex; flex-direction: column; align-items: stretch; text-align: left;
+    padding: 10px; border-radius: 30px; min-height: 0; color: var(--text);
+    background: var(--glas); gap: 0;
+  }
+  .avatar-karte:hover { transform: translateY(-2px); }
+  .avatar-karte .bild {
+    position: relative; aspect-ratio: 4 / 4.2; border-radius: 22px; overflow: hidden;
+    background: linear-gradient(150deg, var(--himmel), var(--salbei) 60%, var(--pfirsich));
+    display: grid; place-items: center;
+  }
+  .avatar-karte img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; display: block; }
+  .avatar-karte .initiale { font: 700 56px/1 var(--rund); color: rgba(34,48,59,.55); }
+  .avatar-karte .text { padding: 12px 8px 6px; display: block; }
+  .avatar-karte .name { display: block; font: 700 21px/1.2 var(--rund); }
+  .avatar-karte .beschr { display: block; color: var(--text-2); font-weight: 500; font-size: 15px; margin-top: 2px; }
+  .avatar-karte .los {
+    margin: 8px 8px 6px; align-self: flex-start; display: inline-flex; align-items: center; gap: 6px;
+    background: var(--koralle); border-radius: 999px; padding: 8px 16px; font-size: 15px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.45);
+  }
+  .avatar-karte .los svg { width: 18px; height: 18px; }
+  .marke {
+    position: absolute; top: 10px; left: 10px; font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 999px;
+  }
+  .auswahl-fuss { margin-top: 20px; }
+  .rund-knopf {
+    width: 50px; height: 50px; min-height: 50px; padding: 0; border-radius: 50%; color: var(--text);
+    background: var(--glas);
+  }
+
+  /* ---------- Gesprächsansicht ---------- */
+  .buehne {
+    position: fixed; inset: 0; overflow: hidden;
+    background:
+      radial-gradient(70vmax 60vmax at 15% 10%, rgba(188,220,242,.95), transparent 60%),
+      radial-gradient(60vmax 50vmax at 90% 30%, rgba(248,205,180,.9), transparent 60%),
+      radial-gradient(70vmax 60vmax at 40% 100%, rgba(195,219,198,.95), transparent 60%),
+      var(--creme);
+  }
+  .avatar-rahmen { position: absolute; inset: 0; overflow: hidden; background: var(--creme-2); }
+  .avatar-rahmen img, .avatar-rahmen video {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: 50% 22%; display: block; background: transparent;
+  }
+  #avatar-video { opacity: 0; transition: opacity .6s ease; }
+  #avatar-video.laeuft { opacity: 1; }
+  .avatar-rahmen::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 45%; pointer-events: none;
+    background: linear-gradient(to top, rgba(34,48,59,.32), rgba(34,48,59,0));
+  }
+  @media (min-width: 760px) and (min-aspect-ratio: 4/5) {
+    .avatar-rahmen {
+      inset: auto; left: 50%; top: calc(var(--hinweis-h) + 20px); transform: translateX(-50%);
+      height: calc(100dvh - var(--hinweis-h) - 40px); width: auto; aspect-ratio: 3 / 4; max-width: calc(100vw - 40px);
+      border-radius: 40px; border: 1px solid rgba(255,255,255,.7);
+      box-shadow: 0 30px 80px rgba(34,48,59,.22), inset 0 1px 0 rgba(255,255,255,.8);
+    }
+  }
+
+  .oben {
+    position: absolute; left: 0; right: 0; top: calc(var(--hinweis-h) + 12px);
+    padding: 0 max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));
+    display: grid; grid-template-columns: 52px 1fr 52px; align-items: start; gap: 10px; z-index: 5;
+  }
+  .oben .mitte { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; }
+  .glas-knopf {
+    width: 52px; height: 52px; min-height: 52px; padding: 0; border-radius: 50%;
+    background: rgba(255,255,255,.5); color: var(--text);
+  }
+  .status-pille {
+    display: inline-flex; align-items: center; gap: 8px; max-width: 100%;
+    padding: 8px 16px; border-radius: 999px; font-weight: 600; font-size: 15px; background: rgba(255,255,255,.55);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 6px;
+  }
+  .status-pille .punkt { width: 10px; height: 10px; border-radius: 50%; background: #9aa6b0; flex: none; }
+  .status-pille .name { font-family: var(--rund); font-weight: 700; }
+  .status-pille[data-art=bereit] .punkt { background: #49a35f; }
+  .status-pille[data-art=hoert] .punkt { background: var(--koralle-tief); animation: blinken 1.2s ease-in-out infinite; }
+  .status-pille[data-art=denkt] .punkt { background: var(--himmel-tief); animation: blinken 1s ease-in-out infinite; }
+  .status-pille[data-art=spricht] .punkt { background: var(--salbei-tief); animation: blinken .8s ease-in-out infinite; }
+  .status-pille[data-art=verbinde] .punkt { background: #d6a23a; animation: blinken 1.4s ease-in-out infinite; }
+  .status-pille[data-art=fehler] .punkt { background: var(--rot); }
+  @keyframes blinken { 50% { opacity: .35; transform: scale(.8); } }
+  .ton-pille { min-height: 40px; padding: 0 14px; font-size: 14px; background: rgba(255,255,255,.6); color: var(--text); }
+  .ton-pille svg { width: 20px; height: 20px; }
+
+  .unten {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 5;
+    padding: 0 16px calc(18px + env(safe-area-inset-bottom));
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+  }
+  .unten > * { width: 100%; max-width: 560px; }
+  .toast { border-radius: 20px; padding: 10px 16px; font-size: 15px; margin: 0; background: var(--glas-stark); }
+  .toast.fehler { color: var(--rot); }
+  .live { border-radius: 20px; padding: 10px 16px; font-style: italic; color: var(--text-2); background: rgba(255,255,255,.6); border-style: dashed; }
+
+  .untertitel {
+    display: flex; flex-direction: column; gap: 6px; background: none; border: 0; box-shadow: none;
+    padding: 0; min-height: 0; border-radius: 0; font-weight: 400; text-align: left; color: var(--text);
+  }
+  .untertitel:active:not(:disabled) { transform: none; }
+  .ut {
+    max-width: 88%; padding: 9px 14px; border-radius: 20px; font-size: 16px; line-height: 1.4;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    animation: auftauchen .35s ease both;
+  }
+  .ut.nutzer { align-self: flex-end; background: rgba(188,220,242,.75); border-bottom-right-radius: 6px; }
+  .ut.avatar { align-self: flex-start; background: rgba(255,255,255,.7); border-bottom-left-radius: 6px; }
+  .ut.leer { align-self: center; text-align: center; color: var(--text-2); font-size: 15px; background: rgba(255,255,255,.55); }
+  @keyframes auftauchen { from { opacity: 0; transform: translateY(8px); } }
+
+  .steuerung { display: flex; justify-content: center; align-items: center; gap: 22px; margin-top: 4px; }
+  .steuer-knopf {
+    flex-direction: column; gap: 2px; width: 72px; height: 66px; min-height: 66px; padding: 0;
+    border-radius: 24px; font-size: 12.5px; font-weight: 600; color: var(--text); background: rgba(255,255,255,.55);
+  }
+  .mikro {
+    position: relative; width: 88px; height: 88px; min-height: 88px; padding: 0; border-radius: 50%;
+    background: linear-gradient(150deg, #fff 0%, var(--himmel) 55%, var(--salbei) 100%);
+    color: var(--text);
+    border: 1px solid rgba(255,255,255,.85);
+    box-shadow: inset 0 2px 0 rgba(255,255,255,.9), 0 12px 30px rgba(34,48,59,.22);
+  }
+  .mikro svg { width: 36px; height: 36px; }
+  .mikro.hoert { background: linear-gradient(150deg, #ffd9c8, var(--koralle) 70%); }
+  .mikro.hoert::before, .mikro.hoert::after {
+    content: ""; position: absolute; inset: -2px; border-radius: 50%;
+    border: 3px solid rgba(239,138,108,.55); animation: puls 1.8s ease-out infinite; pointer-events: none;
+  }
+  .mikro.hoert::after { animation-delay: .9s; }
+  @keyframes puls { from { transform: scale(1); opacity: .9; } to { transform: scale(1.6); opacity: 0; } }
+
+  /* ---------- Sheets ---------- */
+  dialog.sheet {
+    margin: auto auto 0; padding: 0; border: 0; color: var(--text);
+    width: min(640px, 100%); max-width: 100%;
+    max-height: calc(100dvh - var(--hinweis-h) - 16px);
+    border-radius: 32px 32px 0 0;
+    background: rgba(251,246,238,.82);
+    -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 -10px 40px rgba(34,48,59,.18);
+    overflow: hidden;
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    dialog.sheet { background: var(--creme); }
+  }
+  dialog.sheet[open] { display: flex; flex-direction: column; animation: hochgleiten .32s cubic-bezier(.2,.8,.2,1); }
+  dialog.sheet::backdrop { background: rgba(34,48,59,.28); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+  @keyframes hochgleiten { from { transform: translateY(40px); opacity: 0; } }
+  @media (min-width: 760px) { dialog.sheet { margin: auto; border-radius: 32px; max-height: calc(100dvh - var(--hinweis-h) - 48px); } }
+  .sheet-kopf {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 10px 16px 8px 22px; position: relative;
+  }
+  .sheet-kopf::before {
+    content: ""; position: absolute; top: 7px; left: 50%; width: 40px; height: 5px; margin-left: -20px;
+    border-radius: 3px; background: rgba(34,48,59,.18);
+  }
+  .sheet-kopf h2 { margin: 14px 0 0; font-size: 22px; }
+  .sheet-kopf .glas-knopf { width: 44px; height: 44px; min-height: 44px; margin-top: 10px; background: rgba(255,255,255,.7); }
+  .sheet-innen { padding: 4px 22px calc(24px + env(safe-area-inset-bottom)); overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .gruppe { background: rgba(255,255,255,.6); border: 1px solid rgba(255,255,255,.8); border-radius: 22px; padding: 4px 16px; margin: 14px 0; }
+  .gruppe h3 { font-size: 16px; margin: 12px 0 4px; }
+  .zeile { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 56px; padding: 8px 0; border-bottom: 1px solid rgba(34,48,59,.08); }
+  .zeile:last-child { border-bottom: 0; }
+  .zeile label { margin: 0; font-weight: 500; }
+  input.schalter {
+    -webkit-appearance: none; appearance: none; flex: none; width: 52px; height: 32px; margin: 0; border-radius: 999px;
+    background: rgba(34,48,59,.18); position: relative; cursor: pointer; transition: background-color .2s ease;
+  }
+  input.schalter::before {
+    content: ""; position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 50%;
+    background: #fff; box-shadow: 0 2px 6px rgba(34,48,59,.25); transition: transform .2s ease;
+  }
+  input.schalter:checked { background: var(--salbei-tief); }
+  input.schalter:checked::before { transform: translateX(20px); }
+  input.schalter:focus-visible { outline: 3px solid var(--himmel-tief); outline-offset: 2px; }
+
+  .verlauf { display: flex; flex-direction: column; gap: 8px; padding: 8px 0; min-height: 80px; }
+  .verlauf:empty::before { content: "Noch kein Gespräch. Tippen Sie unten auf das Mikrofon oder schreiben Sie hier."; color: var(--text-2); font-size: 15px; }
+  .blase { max-width: 85%; padding: 9px 14px; border-radius: 20px; white-space: pre-wrap; font-size: 16px; }
+  .blase.nutzer { align-self: flex-end; background: var(--himmel); border-bottom-right-radius: 6px; }
+  .blase.avatar { align-self: flex-start; background: #fff; border: 1px solid rgba(34,48,59,.08); border-bottom-left-radius: 6px; }
+  .tipp-zeile { display: flex; gap: 8px; margin-top: 10px; }
+  .tipp-zeile input { flex: 1; min-width: 0; }
+
+  #untertitel-blasen { width: 100%; }
+  .datei-knopf { cursor: pointer; position: relative; }
+  .datei-knopf input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+  .ausgabe {
+    min-height: 120px; border-radius: 18px; padding: 14px; white-space: pre-wrap;
+    background: rgba(255,255,255,.55); border: 1px dashed rgba(34,48,59,.2); color: var(--text-2);
+  }
+  .ausgabe.gefuellt { color: var(--text); border-style: solid; background: rgba(255,255,255,.85); }
+  .ausgabe.laedt { font-style: italic; }
+  .zusatz h3 { margin: 14px 0 6px; font-size: 16px; }
+  .zusatz ul { margin: 0; padding-left: 20px; }
+  .anbieter { margin: 10px 0 0; font-size: 13px; color: var(--text-2); }
+
+  details.gruppe summary { cursor: pointer; font-weight: 600; min-height: 52px; display: flex; align-items: center; list-style: none; }
+  details.gruppe summary::-webkit-details-marker { display: none; }
+  details.gruppe summary::after { content: "›"; margin-left: auto; font-size: 22px; transition: transform .2s ease; }
+  details.gruppe[open] summary::after { transform: rotate(90deg); }
+  table { width: 100%; border-collapse: collapse; }
+  td { text-align: left; padding: 10px 4px; border-bottom: 1px solid rgba(34,48,59,.08); }
+  td.rechts { text-align: right; }
+  .datenschutz ul { margin: 6px 0 12px; padding-left: 20px; font-size: 15px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+  <div id="hinweis" class="prototyp glas" role="note">Prototyp – nur Testdaten. Kein Ersatz für ärztliche Beurteilung.</div>
+
+  <!-- ================= Anmeldung ================= -->
+  <div id="ansicht-login" hidden>
+    <main class="seite">
+      <div class="karte glas">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="sym"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/></svg>
+        </div>
+        <h1 class="login-titel">Avatar-Übersetzer</h1>
+        <p class="login-unter">Schön, dass Sie da sind. Bitte melden Sie sich an.</p>
+        <form id="login-form" autocomplete="on">
+          <label for="l-name">Benutzername</label>
+          <input id="l-name" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" required>
+          <label for="l-pw">Passwort</label>
+          <input id="l-pw" type="password" autocomplete="current-password" required>
+
+          <div class="hinweis-box" role="note">
+            <strong>Wichtig zum Datenschutz</strong>
+            Für diese Demo nutzen wir KI-Dienste von Online-Anbietern, die <u>nicht DSGVO-konform</u> sind.
+            Ihre Eingaben verlassen dieses Gerät und den Server und gehen an diese Anbieter.
+            <ul>
+              <li>Geben Sie <b>ausschließlich erfundene oder öffentliche Testdaten</b> ein.</li>
+              <li><b>Niemals</b> echte Patientendaten, Namen, Geburtsdaten oder Fotos echter Unterlagen.</li>
+            </ul>
+          </div>
+          <label class="haken" for="l-ok">
+            <input id="l-ok" type="checkbox" required>
+            <span>Ich habe verstanden: Ich gebe nur Testdaten ein, keine echten Patientendaten.</span>
+          </label>
+          <button type="submit" id="l-knopf" class="breit">Anmelden</button>
+          <div id="l-meldung" class="meldung" role="alert"></div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <!-- ================= Avatar-Auswahl ================= -->
+  <div id="ansicht-auswahl" hidden>
+    <main class="seite">
+      <div class="kopfzeile">
+        <p class="gruss" id="gruss"></p>
+        <button id="auswahl-einstellungen" type="button" class="rund-knopf glas" aria-label="Einstellungen">
+          <svg viewBox="0 0 24 24" class="sym" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+        </button>
+      </div>
+      <h1 class="auswahl-titel">Mit wem möchten Sie sprechen?</h1>
+      <p class="auswahl-unter">Wählen Sie einen Avatar. Er hört zu, antwortet und liest Texte in einfacher Sprache vor.</p>
+      <div id="avatar-liste" class="avatar-raster" aria-busy="true"></div>
+      <div id="auswahl-meldung" class="meldung" role="alert"></div>
+      <div class="hinweis-box auswahl-fuss" role="note">
+        <strong>Demo mit Cloud-KI (nicht DSGVO-konform)</strong>
+        Nur erfundene Testdaten eingeben. Antworten und Übersetzungen erzeugt Anthropic (USA).
+        Was der Avatar spricht, geht an D-ID (Israel/USA, Server in den USA; laut Anbieter nach spätestens 72 Stunden gelöscht).
+      </div>
+    </main>
+  </div>
+
+  <!-- ================= Gespräch ================= -->
+  <div id="ansicht-gespraech" class="buehne" hidden>
+    <div class="avatar-rahmen">
+      <img id="buehne-bild" alt="" hidden>
+      <video id="leerlauf" loop muted playsinline hidden></video>
+      <video id="avatar-video" autoplay playsinline></video>
+    </div>
+
+    <div class="oben">
+      <button id="zurueck" type="button" class="glas-knopf glas" aria-label="Zurück zur Avatar-Auswahl" title="Zurück">
+        <svg viewBox="0 0 24 24" class="sym" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="mitte">
+        <div id="status-pille" class="status-pille glas" data-art="aus" role="status" aria-live="polite">
+          <span class="punkt" aria-hidden="true"></span>
+          <span class="name" id="buehne-name"></span>
+          <span id="status-text">Nicht verbunden</span>
+        </div>
+        <button id="avatar-ton" type="button" class="ton-pille glas" hidden>
+          <svg viewBox="0 0 24 24" class="sym" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+          Ton einschalten
+        </button>
+      </div>
+      <button id="einstellungen-knopf" type="button" class="glas-knopf glas" aria-label="Einstellungen" title="Einstellungen">
+        <svg viewBox="0 0 24 24" class="sym" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+      </button>
+    </div>
+
+    <div class="unten">
+      <p id="g-meldung" class="toast glas" role="alert" hidden></p>
+      <div id="live" class="live glas" aria-live="polite" hidden></div>
+      <button id="untertitel" type="button" class="untertitel" aria-describedby="untertitel-tipp">
+        <span id="untertitel-blasen" class="untertitel"></span>
+        <span id="untertitel-tipp" class="vh">Tippen öffnet den ganzen Gesprächsverlauf mit Tippfeld.</span>
+      </button>
+      <div class="steuerung">
+        <button id="kontext-knopf" type="button" class="steuer-knopf glas" aria-label="Kontext hochladen">
+          <svg viewBox="0 0 24 24" class="sym" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 17v-6M9 14l3-3 3 3"/></svg>
+          <span aria-hidden="true">Kontext</span>
+        </button>
+        <button id="mikro" type="button" class="mikro" aria-label="Zuhören starten" aria-pressed="false">
+          <svg viewBox="0 0 24 24" class="sym" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+        </button>
+        <button id="stopp" type="button" class="steuer-knopf glas" aria-label="Stopp" disabled>
+          <svg viewBox="0 0 24 24" class="sym" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="2.5"/></svg>
+          <span aria-hidden="true">Stopp</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Sheet: Verlauf ================= -->
+  <dialog id="sheet-verlauf" class="sheet" aria-labelledby="t-verlauf">
+    <div class="sheet-kopf">
+      <h2 id="t-verlauf">Gesprächsverlauf</h2>
+      <button type="button" class="glas-knopf" data-schliessen aria-label="Schließen">
+        <svg viewBox="0 0 24 24" class="sym" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-innen">
+      <div id="verlauf" class="verlauf" aria-live="polite"></div>
+      <form id="tipp-form" class="tipp-zeile" autocomplete="off">
+        <label for="tipp" class="vh">Nachricht tippen</label>
+        <input id="tipp" type="text" maxlength="1000" placeholder="Hier tippen (nur Testdaten)">
+        <button id="tipp-senden" type="submit">Senden</button>
+      </form>
+      <p class="anbieter" id="g-hinweis" hidden></p>
+    </div>
+  </dialog>
+
+  <!-- ================= Sheet: Kontext ================= -->
+  <dialog id="sheet-kontext" class="sheet" aria-labelledby="t-kontext">
+    <div class="sheet-kopf">
+      <h2 id="t-kontext">Kontext hochladen</h2>
+      <button type="button" class="glas-knopf" data-schliessen aria-label="Schließen">
+        <svg viewBox="0 0 24 24" class="sym" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-innen">
+      <p class="hinweis-box" role="note">Nur erfundene oder öffentliche Testdaten – keine echten Patientendaten.</p>
+      <label for="original">Text einfügen</label>
+      <textarea id="original" maxlength="15000" placeholder="Beispiel: ein Arztbrief aus dem Ordner daten/grascco"></textarea>
+      <div class="knopf-zeile">
+        <label class="datei-knopf">
+          <svg viewBox="0 0 24 24" class="sym" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>
+          .txt-Datei wählen
+          <input id="datei" type="file" accept=".txt,text/plain">
+        </label>
+      </div>
+      <p class="leise">Die Datei wird nur in Ihrem Browser gelesen. Gesendet wird erst, wenn Sie unten einen Knopf drücken.</p>
+      <div class="knopf-zeile">
+        <button id="uebersetzen" type="button" disabled>In einfache Sprache übersetzen</button>
+      </div>
+      <div id="u-meldung" class="meldung" role="alert"></div>
+
+      <h3>Ergebnis</h3>
+      <div class="ausgabe" id="ausgabe" aria-live="polite">Hier erscheint das Ergebnis.</div>
+      <div class="zusatz" id="zusatz-nicht" hidden>
+        <h3>Nicht übersetzbare Stellen</h3>
+        <ul id="liste-nicht"></ul>
+      </div>
+      <div class="zusatz" id="zusatz-hinweise" hidden>
+        <h3>Hinweise</h3>
+        <ul id="liste-hinweise"></ul>
+      </div>
+      <p class="anbieter" id="anbieter" hidden></p>
+
+      <div class="knopf-zeile">
+        <button id="vorlesen" type="button" class="himmel" disabled>
+          <svg viewBox="0 0 24 24" class="sym" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>
+          Vom Avatar vorlesen lassen
+        </button>
+      </div>
+      <p class="leise" id="vorlesen-info"></p>
+    </div>
+  </dialog>
+
+  <!-- ================= Sheet: Einstellungen ================= -->
+  <dialog id="sheet-einstellungen" class="sheet" aria-labelledby="t-einst">
+    <div class="sheet-kopf">
+      <h2 id="t-einst">Einstellungen</h2>
+      <button type="button" class="glas-knopf" data-schliessen aria-label="Schließen">
+        <svg viewBox="0 0 24 24" class="sym" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="sheet-innen">
+      <p class="leise">Angemeldet als <b id="wer"></b></p>
+      <div class="gruppe">
+        <div class="zeile">
+          <label for="auto-hoeren">Nach der Antwort weiter zuhören</label>
+          <input id="auto-hoeren" class="schalter" type="checkbox" role="switch" checked>
+        </div>
+        <div class="zeile">
+          <label for="ton-an">Ton des Avatars</label>
+          <input id="ton-an" class="schalter" type="checkbox" role="switch" checked>
+        </div>
+        <div class="zeile">
+          <span>Gespräch neu beginnen</span>
+          <button id="neu-gespraech" type="button" class="zweit klein">Neu beginnen</button>
+        </div>
+      </div>
+
+      <details class="gruppe datenschutz">
+        <summary>Datenschutz-Information</summary>
+        <p>Diese Demo nutzt Cloud-Dienste, die <b>nicht DSGVO-konform</b> sind. Bitte nur erfundene Testdaten verwenden.</p>
+        <ul>
+          <li>Übersetzung und Antworten: Anthropic (USA).</li>
+          <li>Avatar-Video und Stimme: D-ID (Israel/USA, Server in den USA; laut Anbieter nach spätestens 72 Stunden gelöscht).</li>
+          <li>Spracherkennung: Ihr Browser (Chrome/Edge: Google, Safari: Apple).</li>
+        </ul>
+        <p class="anbieter" id="a-anbieter" hidden></p>
+      </details>
+
+      <details class="gruppe" id="admin-bereich" hidden>
+        <summary>Nutzer verwalten</summary>
+        <table><tbody id="nutzer-liste"></tbody></table>
+        <h3>Neuen Nutzer anlegen</h3>
+        <form id="neu-form">
+          <label for="n-name">Benutzername (a–z, 0–9)</label>
+          <input id="n-name" type="text" autocapitalize="none" autocorrect="off" autocomplete="off" required>
+          <label for="n-rolle">Rolle</label>
+          <select id="n-rolle"><option value="arzt">Ärztin / Arzt</option><option value="admin">Administrator</option></select>
+          <label for="n-pw">Start-Passwort (mindestens 10 Zeichen)</label>
+          <input id="n-pw" type="password" autocomplete="new-password" minlength="10" required>
+          <div class="knopf-zeile"><button type="submit">Anlegen</button></div>
+          <div id="n-meldung" class="meldung" role="alert"></div>
+        </form>
+      </details>
+
+      <button id="logout" type="button" class="gefahr breit">Abmelden</button>
+    </div>
+  </dialog>
+
+<script nonce="__NONCE__">
+'use strict';
+const $ = (id) => document.getElementById(id);
+let ich = null;
+
+const STANDARD_AVATAR = {
+  id: 'emma', name: 'Emma',
+  bild: 'https://create-images-results.d-id.com/DefaultPresenters/Emma_f/v1_image.jpeg',
+  beschreibung: 'Ruhig und freundlich',
+};
+let avatare = [], aktuellerAvatar = null, didOk = false;
+
+async function api(methode, pfad, daten) {
+  const opt = { method: methode, headers: { 'X-Requested-With': 'akki-app' }, credentials: 'same-origin' };
+  if (methode !== 'GET') { opt.headers['Content-Type'] = 'application/json'; opt.body = JSON.stringify(daten || {}); }
+  let r;
+  try { r = await fetch(pfad, opt); } catch { throw new Error('Keine Verbindung zum Server.'); }
+  const j = await r.json().catch(() => ({}));
+  if (r.status === 401 && pfad !== '/api/login') { zeigeLogin(); throw new Error('Bitte neu anmelden.'); }
+  if (!r.ok) { const f = new Error(j.fehler || 'Unbekannter Fehler.'); f.status = r.status; throw f; }
+  return j;
+}
+function meldung(el, text, art) { el.textContent = text || ''; el.className = 'meldung ' + (art || ''); }
+
+// Kurze Meldung über dem Avatar (verschwindet nach einiger Zeit).
+let toastTimer = null;
+function toast(text, art) {
+  const t = $('g-meldung');
+  clearTimeout(toastTimer);
+  t.textContent = text || '';
+  t.className = 'toast glas' + (art ? ' ' + art : '');
+  t.hidden = !text;
+  if (text) toastTimer = setTimeout(() => { t.hidden = true; }, art === 'fehler' ? 12000 : 7000);
+}
+
+// Höhe des Pflicht-Hinweises merken, damit nichts darunter verschwindet.
+function hinweisHoehe() {
+  document.documentElement.style.setProperty('--hinweis-h', $('hinweis').offsetHeight + 'px');
+}
+if (window.ResizeObserver) new ResizeObserver(hinweisHoehe).observe($('hinweis'));
+window.addEventListener('resize', hinweisHoehe);
+hinweisHoehe();
+
+// ---------- Ansichten ----------
+function zeige(name) {
+  for (const n of ['login', 'auswahl', 'gespraech']) $('ansicht-' + n).hidden = n !== name;
+  document.body.classList.toggle('im-gespraech', name === 'gespraech');
+  window.scrollTo(0, 0);
+}
+function schliesseSheets() {
+  for (const d of document.querySelectorAll('dialog.sheet')) if (d.open) d.close();
+}
+function oeffne(id) {
+  const d = $(id);
+  if (d.open) return;
+  if (typeof d.showModal === 'function') d.showModal(); else d.setAttribute('open', '');
+}
+for (const d of document.querySelectorAll('dialog.sheet')) {
+  d.addEventListener('click', (e) => { if (e.target === d) d.close(); });
+}
+for (const b of document.querySelectorAll('[data-schliessen]')) {
+  b.addEventListener('click', () => b.closest('dialog').close());
+}
+
+function zeigeLogin() {
+  ich = null; didOk = false;
+  hoerenAbbrechen();
+  if (pc || verbindet) avatarAufraeumen();
+  schliesseSheets();
+  zeige('login');
+  $('l-pw').value = ''; $('l-ok').checked = false;
+}
+function zeigeApp(nutzer) {
+  ich = nutzer;
+  $('wer').textContent = nutzer.username + (nutzer.role === 'admin' ? ' (Admin)' : '');
+  $('gruss').textContent = 'Hallo, ' + nutzer.username;
+  $('admin-bereich').hidden = nutzer.role !== 'admin';
+  $('admin-bereich').open = false;
+  zeigeAuswahl();
+}
+
+$('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  $('l-knopf').disabled = true; meldung($('l-meldung'), '');
+  try {
+    zeigeApp(await api('POST', '/api/login', {
+      username: $('l-name').value, password: $('l-pw').value, consent: $('l-ok').checked,
+    }));
+  } catch (err) { meldung($('l-meldung'), err.message, 'fehler'); }
+  $('l-knopf').disabled = false;
+});
+$('logout').addEventListener('click', async () => {
+  if (pc || verbindet) await avatarTrennen();
+  try { await api('POST', '/api/logout'); } catch {}
+  zeigeLogin();
+});
+
+// ---------- Avatar-Auswahl ----------
+function zeigeAuswahl() {
+  zeige('auswahl');
+  if (!avatare.length) ladeAvatare();
+}
+async function ladeAvatare() {
+  const box = $('avatar-liste');
+  box.setAttribute('aria-busy', 'true');
+  meldung($('auswahl-meldung'), '');
+  let liste = [], standard = null;
+  try {
+    const d = await api('GET', '/api/avatare');
+    liste = Array.isArray(d.avatare) ? d.avatare.filter((a) => a && a.id && a.name) : [];
+    standard = d.standard || null;
+  } catch {
+    if (!ich) return;            // abgemeldet
+  }
+  if (!liste.length) { liste = [STANDARD_AVATAR]; standard = STANDARD_AVATAR.id; }
+  avatare = liste;
+  baueKarten(standard);
+  box.setAttribute('aria-busy', 'false');
+}
+function baueKarten(standard) {
+  const box = $('avatar-liste'); box.replaceChildren();
+  for (const a of avatare) {
+    const k = document.createElement('button');
+    k.type = 'button'; k.className = 'avatar-karte glas';
+    k.setAttribute('aria-label', 'Mit ' + a.name + ' sprechen' + (a.beschreibung ? ': ' + a.beschreibung : ''));
+
+    const bild = document.createElement('span'); bild.className = 'bild';
+    const ini = document.createElement('span'); ini.className = 'initiale'; ini.textContent = a.name.slice(0, 1).toUpperCase();
+    if (a.bild) {
+      const img = document.createElement('img');
+      img.alt = ''; img.loading = 'lazy'; img.src = a.bild;
+      img.addEventListener('error', () => { img.replaceWith(ini); });
+      bild.append(img);
+    } else bild.append(ini);
+    if (standard && a.id === standard) {
+      const m = document.createElement('span'); m.className = 'marke glas'; m.textContent = 'Empfohlen'; bild.append(m);
+    }
+
+    const text = document.createElement('span'); text.className = 'text';
+    const name = document.createElement('span'); name.className = 'name'; name.textContent = a.name;
+    text.append(name);
+    if (a.beschreibung) {
+      const b = document.createElement('span'); b.className = 'beschr'; b.textContent = a.beschreibung; text.append(b);
+    }
+    const los = document.createElement('span'); los.className = 'los'; los.textContent = 'Gespräch beginnen';
+
+    k.append(bild, text, los);
+    k.addEventListener('click', () => waehleAvatar(a));
+    box.append(k);
+  }
+}
+$('auswahl-einstellungen').addEventListener('click', () => oeffne('sheet-einstellungen'));
+
+function waehleAvatar(a) {
+  if (!didOk) {
+    if (!confirm('Texte, die der Avatar spricht, werden an D-ID (Server in den USA, nicht DSGVO-konform) gesendet. Geben Sie nur erfundene Testdaten ein?')) return;
+    didOk = true;
+  }
+  if (!aktuellerAvatar || aktuellerAvatar.id !== a.id) gespraechLeeren();
+  aktuellerAvatar = a;
+  $('buehne-name').textContent = a.name + ' ·';
+  setzeBild(a.bild);
+  setzeLeerlauf(a.leerlaufVideo);
+  zeige('gespraech');
+  // Ton im Rahmen dieses Klicks freigeben (wichtig für iPhone/Safari).
+  video.muted = tonAus();
+  video.play().catch(() => {});
+  if (!Erkennung) toast('Spracheingabe ist in diesem Browser nicht verfügbar. Bitte Chrome, Edge oder Safari nutzen – oder auf die Untertitel tippen und schreiben.');
+  avatarVerbinden(a);
+}
+function setzeBild(url) {
+  const img = $('buehne-bild');
+  if (url) { img.src = url; img.hidden = false; } else { img.removeAttribute('src'); img.hidden = true; }
+}
+function setzeLeerlauf(url) {
+  const v = $('leerlauf');
+  if (url) {
+    if (v.getAttribute('src') !== url) v.src = url;
+    v.hidden = false; v.play().catch(() => {});
+  } else { v.pause(); v.removeAttribute('src'); v.hidden = true; }
+}
+$('leerlauf').addEventListener('error', () => { $('leerlauf').hidden = true; });
+
+$('zurueck').addEventListener('click', async () => {
+  hoerenAbbrechen();
+  schliesseSheets();
+  zeigeAuswahl();
+  await avatarTrennen();
+});
+$('einstellungen-knopf').addEventListener('click', () => oeffne('sheet-einstellungen'));
+$('kontext-knopf').addEventListener('click', () => { oeffne('sheet-kontext'); oberflaeche(); });
+$('untertitel').addEventListener('click', () => {
+  oeffne('sheet-verlauf');
+  $('verlauf').lastElementChild && $('verlauf').lastElementChild.scrollIntoView({ block: 'end' });
+});
+
+// ---------- Nutzerverwaltung (nur Admins) ----------
+$('admin-bereich').addEventListener('toggle', () => { if ($('admin-bereich').open) ladeNutzer(); });
+async function ladeNutzer() {
+  const liste = $('nutzer-liste'); liste.replaceChildren();
+  try {
+    for (const u of await api('GET', '/api/nutzer')) {
+      const tr = document.createElement('tr');
+      const a = document.createElement('td'); a.textContent = u.username;
+      const b = document.createElement('td'); b.textContent = u.role === 'admin' ? 'Administrator' : 'Ärztin / Arzt';
+      const c = document.createElement('td'); c.className = 'rechts';
+      if (u.username !== ich.username) {
+        const k = document.createElement('button');
+        k.type = 'button'; k.className = 'klein gefahr'; k.textContent = 'Löschen';
+        k.setAttribute('aria-label', 'Nutzer ' + u.username + ' löschen');
+        k.addEventListener('click', async () => {
+          if (!confirm('Nutzer „' + u.username + '“ wirklich löschen?')) return;
+          try { await api('DELETE', '/api/nutzer/' + encodeURIComponent(u.username)); ladeNutzer(); }
+          catch (err) { meldung($('n-meldung'), err.message, 'fehler'); }
+        });
+        c.append(k);
+      }
+      tr.append(a, b, c); liste.append(tr);
+    }
+  } catch (err) { meldung($('n-meldung'), err.message, 'fehler'); }
+}
+$('neu-form').addEventListener('submit', async (e) => {
+  e.preventDefault(); meldung($('n-meldung'), '');
+  try {
+    await api('POST', '/api/nutzer', { username: $('n-name').value, role: $('n-rolle').value, password: $('n-pw').value });
+    $('neu-form').reset(); meldung($('n-meldung'), 'Nutzer angelegt.', 'ok'); ladeNutzer();
+  } catch (err) { meldung($('n-meldung'), err.message, 'fehler'); }
+});
+
+// ---------- Kontext: Übersetzen ----------
+const MAX_TEXT = 15000;
+let uebersetztGerade = false;
+function pruefeKnopf() {
+  $('uebersetzen').disabled = uebersetztGerade || !$('original').value.trim();
+  oberflaeche();
+}
+function fuelleListe(boxId, listeId, eintraege) {
+  const liste = $(listeId); liste.replaceChildren();
+  for (const t of eintraege || []) {
+    const li = document.createElement('li'); li.textContent = t; liste.append(li);
+  }
+  $(boxId).hidden = !liste.children.length;
+}
+function leereErgebnis(text, klasse) {
+  const a = $('ausgabe');
+  a.textContent = text; a.className = 'ausgabe' + (klasse ? ' ' + klasse : '');
+  fuelleListe('zusatz-nicht', 'liste-nicht', []);
+  fuelleListe('zusatz-hinweise', 'liste-hinweise', []);
+  $('anbieter').hidden = true; $('anbieter').textContent = '';
+}
+$('original').addEventListener('input', () => {
+  // Neuer Text: altes Ergebnis passt nicht mehr.
+  if ($('ausgabe').classList.contains('gefuellt')) leereErgebnis('Hier erscheint das Ergebnis.');
+  pruefeKnopf();
+});
+$('datei').addEventListener('change', async () => {
+  const f = $('datei').files[0];
+  $('datei').value = '';
+  if (!f) return;
+  meldung($('u-meldung'), '');
+  if (!/\.txt$/i.test(f.name) && f.type !== 'text/plain') { meldung($('u-meldung'), 'Bitte eine .txt-Datei wählen.', 'fehler'); return; }
+  if (f.size > 500000) { meldung($('u-meldung'), 'Die Datei ist zu groß.', 'fehler'); return; }
+  try {
+    const t = await f.text();   // wird nur im Browser gelesen
+    $('original').value = t.slice(0, MAX_TEXT);
+    if (t.length > MAX_TEXT) meldung($('u-meldung'), 'Der Text war zu lang und wurde auf 15.000 Zeichen gekürzt.');
+    leereErgebnis('Hier erscheint das Ergebnis.');
+    pruefeKnopf();
+  } catch { meldung($('u-meldung'), 'Die Datei konnte nicht gelesen werden.', 'fehler'); }
+});
+$('uebersetzen').addEventListener('click', async () => {
+  const text = $('original').value;
+  if (!text.trim()) return;
+  if (!confirm('Enthält der Text ausschließlich erfundene Testdaten? Er wird an einen Cloud-Anbieter außerhalb der DSGVO gesendet.')) return;
+
+  uebersetztGerade = true; pruefeKnopf();
+  meldung($('u-meldung'), '');
+  leereErgebnis('Wird übersetzt …', 'laedt');
+  try {
+    const e = await api('POST', '/api/uebersetzen', { text, modus: 'einfach' });
+    $('ausgabe').textContent = e.text || '';
+    $('ausgabe').className = 'ausgabe gefuellt';
+    fuelleListe('zusatz-nicht', 'liste-nicht', e.nicht_uebersetzbare_stellen);
+    fuelleListe('zusatz-hinweise', 'liste-hinweise', e.hinweise);
+    if (e.anbieter) { $('anbieter').textContent = 'Verarbeitet von: ' + e.anbieter; $('anbieter').hidden = false; }
+  } catch (err) {
+    leereErgebnis('Hier erscheint das Ergebnis.');
+    meldung($('u-meldung'), err.message, 'fehler');
+  }
+  uebersetztGerade = false; pruefeKnopf();
+});
+function vorleseText() {
+  return $('ausgabe').classList.contains('gefuellt') ? $('ausgabe').textContent : $('original').value;
+}
+$('vorlesen').addEventListener('click', () => {
+  const t = vorleseText().trim();
+  if (t.length < 3) return;
+  $('sheet-kontext').close();
+  avatarSprich(t);
+});
+
+// ---------- Avatar (D-ID, Echtzeit-Video) ----------
+// Der Browser baut nur die Videoverbindung auf. Alle Aufrufe an D-ID macht unser Server.
+const video = $('avatar-video');
+let pc = null, datenkanal = null, avatarBereit = false, avatarSpricht = false, iceWarteschlange = null;
+let verbindet = false, verbindungNr = 0, sprechNr = 0, aktuelleVideoId = null;
+let grund = { text: 'Nicht verbunden', art: 'aus' };
+
+function tonAus() { return !$('ton-an').checked; }
+function grundStatus(text, art) { grund = { text, art }; oberflaeche(); }
+
+// Aktualisiert Statuspille und alle Knöpfe auf einmal.
+function oberflaeche() {
+  let s = grund;
+  if (hoertZu) s = { text: 'Hört zu …', art: 'hoert' };
+  else if (gespraechLaeuft) s = { text: 'Denkt …', art: 'denkt' };
+  else if (avatarSpricht) s = { text: 'Spricht …', art: 'spricht' };
+  $('status-text').textContent = s.text;
+  $('status-pille').dataset.art = s.art;
+
+  const k = $('mikro');
+  k.classList.toggle('hoert', hoertZu);
+  k.setAttribute('aria-pressed', String(hoertZu));
+  k.setAttribute('aria-label', hoertZu ? 'Fertig gesprochen – senden' : 'Zuhören starten');
+  k.title = hoertZu ? 'Fertig gesprochen' : 'Sprechen';
+  k.disabled = !Erkennung || (!hoertZu && (gespraechLaeuft || avatarSpricht));
+
+  $('stopp').disabled = !(hoertZu || avatarSpricht);
+  $('tipp-senden').disabled = gespraechLaeuft;
+
+  const vt = vorleseText().trim();
+  $('vorlesen').disabled = !avatarBereit || avatarSpricht || gespraechLaeuft || vt.length < 3;
+  $('vorlesen-info').textContent = !avatarBereit
+    ? 'Zum Vorlesen muss der Avatar verbunden sein.'
+    : ($('ausgabe').classList.contains('gefuellt') ? 'Der Avatar liest das Ergebnis vor.' : 'Der Avatar liest den eingefügten Text vor.');
+
+  $('avatar-ton').hidden = !pc || !video.muted || tonAus();
+}
+
+function sendeIce(daten) {
+  api('POST', '/api/avatar/ice', daten).catch(() => {});
+}
+function avatarAufraeumen(text, art) {
+  try { pc && pc.close(); } catch {}
+  pc = null; datenkanal = null; avatarBereit = false; avatarSpricht = false; iceWarteschlange = null;
+  verbindet = false; aktuelleVideoId = null;
+  video.srcObject = null; video.classList.remove('laeuft');
+  grundStatus(text || 'Nicht verbunden', art || 'aus');
+}
+async function avatarTrennen() {
+  const warAktiv = !!pc || verbindet;
+  verbindungNr++;
+  autoHoerenGeplant = false;
+  avatarAufraeumen();
+  if (warAktiv) { try { await api('POST', '/api/avatar/stop'); } catch {} }
+}
+function wirdBereit() {
+  if (avatarBereit || !pc) return;
+  avatarBereit = true;
+  grundStatus('Bereit', 'bereit');
+}
+function leseVideoId(m) {
+  const i = m.indexOf('{');
+  if (i < 0) return null;
+  try { const j = JSON.parse(m.slice(i)); return (j.metadata && j.metadata.videoId) || j.videoId || null; }
+  catch { return null; }
+}
+
+async function avatarVerbinden(a) {
+  if (pc || verbindet) await avatarTrennen();
+  const nr = ++verbindungNr;
+  verbindet = true;
+  grundStatus('Verbinde …', 'verbinde');
+  try {
+    const s = await api('POST', '/api/avatar/start', { avatarId: a.id });
+    if (nr !== verbindungNr) { api('POST', '/api/avatar/stop').catch(() => {}); return; }
+    if (s.bild) setzeBild(s.bild);
+    if (s.leerlaufVideo) setzeLeerlauf(s.leerlaufVideo);
+    if (s.anbieter) { $('a-anbieter').textContent = 'Avatar von: ' + s.anbieter; $('a-anbieter').hidden = false; }
+
+    const p = new RTCPeerConnection({ iceServers: s.ice_servers });
+    pc = p;
+    iceWarteschlange = [];
+    p.addEventListener('icecandidate', (e) => {
+      if (pc !== p) return;
+      const c = e.candidate;
+      const daten = c ? { candidate: c.candidate, sdpMid: c.sdpMid, sdpMLineIndex: c.sdpMLineIndex } : {};
+      if (iceWarteschlange) iceWarteschlange.push(daten); else sendeIce(daten);
+    });
+    p.addEventListener('track', (e) => {
+      if (pc !== p || !e.streams[0] || e.track.kind !== 'video') return;
+      video.srcObject = e.streams[0];
+      video.muted = tonAus();
+      video.play().catch(() => { video.muted = true; video.play().catch(() => {}); oberflaeche(); });
+    });
+    p.addEventListener('connectionstatechange', () => {
+      if (pc !== p) return;
+      const z = p.connectionState;
+      if (z === 'connected') { verbindet = false; setTimeout(() => { if (pc === p) wirdBereit(); }, 5000); }  // Rückfall, falls „stream/ready“ ausbleibt
+      if (z === 'failed') { avatarAufraeumen('Verbindung fehlgeschlagen', 'fehler'); api('POST', '/api/avatar/stop').catch(() => {}); }
+      if (z === 'disconnected') grundStatus('Verbindung unterbrochen …', 'verbinde');
+    });
+    const dc = p.createDataChannel('JanusDataChannel');
+    datenkanal = dc;
+    dc.onmessage = (e) => {
+      if (pc !== p) return;
+      const m = String(e.data);
+      if (m.includes('stream/ready')) wirdBereit();
+      if (m.includes('stream/started')) { avatarSpricht = true; aktuelleVideoId = leseVideoId(m) || aktuelleVideoId; oberflaeche(); }
+      if (m.includes('stream/done')) { avatarSpricht = false; aktuelleVideoId = null; oberflaeche(); nachDemSprechen(); }
+      if (m.includes('stream/error')) {
+        avatarSpricht = false; aktuelleVideoId = null;
+        toast('Der Avatar konnte den Text nicht sprechen.', 'fehler');
+        oberflaeche(); nachDemSprechen();
+      }
+    };
+
+    await p.setRemoteDescription(s.offer);
+    const antwort = await p.createAnswer();
+    await p.setLocalDescription(antwort);
+    if (pc !== p) return;
+    await api('POST', '/api/avatar/sdp', { answer: { type: antwort.type, sdp: antwort.sdp } });
+    if (pc !== p) return;
+    // Erst nach der Antwort die gesammelten Netzwerkdaten schicken.
+    const warten = iceWarteschlange || [];
+    iceWarteschlange = null;
+    for (const d of warten) sendeIce(d);
+    if (!avatarBereit) grundStatus('Verbinde Video …', 'verbinde');
+  } catch (err) {
+    if (nr !== verbindungNr) return;
+    avatarAufraeumen('Nicht verbunden', 'fehler');
+    toast(err.message || 'Verbindung nicht möglich.', 'fehler');
+  }
+}
+video.addEventListener('playing', () => { video.classList.add('laeuft'); oberflaeche(); });
+video.addEventListener('volumechange', oberflaeche);
+$('avatar-ton').addEventListener('click', () => { video.muted = false; video.play().catch(() => {}); oberflaeche(); });
+$('ton-an').addEventListener('change', () => {
+  video.muted = tonAus();
+  if (!video.muted) video.play().catch(() => {});
+  oberflaeche();
+});
+
+function sprechTimer(text) {
+  // Falls „stream/done“ ausbleibt: nach geschätzter Sprechdauer weitermachen.
+  const nr = ++sprechNr;
+  setTimeout(() => {
+    if (avatarSpricht && nr === sprechNr) { avatarSpricht = false; oberflaeche(); nachDemSprechen(); }
+  }, Math.min(120000, 4000 + text.length * 90));
+}
+
+async function avatarSprich(text) {
+  toast('');
+  avatarSpricht = true; oberflaeche();
+  try {
+    await api('POST', '/api/avatar/sprechen', { text });
+  } catch (err) {
+    avatarSpricht = false; oberflaeche();
+    toast(err.message, 'fehler');
+    if (/abgelaufen|nicht verbunden/i.test(err.message)) avatarAufraeumen();
+    return;
+  }
+  sprechTimer(text);
+}
+
+// Stopp: Zuhören abbrechen oder den sprechenden Avatar unterbrechen.
+$('stopp').addEventListener('click', () => {
+  autoHoerenGeplant = false;
+  if (hoertZu) hoerenAbbrechen();
+  if (avatarSpricht) {
+    if (datenkanal && datenkanal.readyState === 'open' && aktuelleVideoId) {
+      try { datenkanal.send(JSON.stringify({ type: 'stream/interrupt', videoId: aktuelleVideoId, timestamp: Date.now() })); } catch {}
+    }
+    avatarSpricht = false; aktuelleVideoId = null; sprechNr++;
+  }
+  oberflaeche();
+});
+
+// ---------- Gespräch: Sprache → Text → Antwort → Avatar spricht ----------
+// Spracherkennung des Browsers (Chrome/Edge: Google-Server, Safari: Apple). Kein Schlüssel nötig.
+const Erkennung = window.SpeechRecognition || window.webkitSpeechRecognition;
+let erkennung = null, hoertZu = false, gespraechLaeuft = false, mikroOk = false, autoHoerenGeplant = false;
+let hoerenVerworfen = false;
+let verlauf = [];
+
+function blase(rolle, text) {
+  const d = document.createElement('div');
+  d.className = 'blase ' + rolle; d.textContent = text;
+  $('verlauf').append(d);
+  if ($('sheet-verlauf').open) d.scrollIntoView({ block: 'end' });
+  return d;
+}
+// Untertitel: die letzten zwei Beiträge über den Bedienelementen.
+function untertitelNeu() {
+  const box = $('untertitel-blasen'); box.replaceChildren();
+  const letzte = [...$('verlauf').children].slice(-2);
+  if (!letzte.length) {
+    const s = document.createElement('span');
+    s.className = 'ut leer glas';
+    s.textContent = 'Tippen Sie auf das Mikrofon und sprechen Sie – oder hier, um zu schreiben.';
+    box.append(s);
+  }
+  for (const b of letzte) {
+    const s = document.createElement('span');
+    s.className = 'ut glas ' + (b.classList.contains('nutzer') ? 'nutzer' : 'avatar');
+    s.textContent = b.textContent;
+    box.append(s);
+  }
+}
+new MutationObserver(untertitelNeu).observe($('verlauf'), { childList: true, subtree: true, characterData: true });
+untertitelNeu();
+
+function nachDemSprechen() {
+  if (!autoHoerenGeplant) return;
+  autoHoerenGeplant = false;
+  if ($('auto-hoeren').checked && !$('ansicht-gespraech').hidden && !document.querySelector('dialog.sheet[open]')) {
+    setTimeout(startHoeren, 500);
+  }
+}
+function hoerenAbbrechen() {
+  if (!erkennung) return;
+  hoerenVerworfen = true;
+  try { erkennung.abort(); } catch {}
+}
+
+function startHoeren() {
+  if (!Erkennung || hoertZu || gespraechLaeuft || avatarSpricht) return;
+  if (!mikroOk) {
+    if (!confirm('Für die Spracheingabe wandelt Ihr Browser Ihre Sprache in Text um. Die Aufnahme kann dabei an den Browser-Hersteller (z. B. Google oder Apple) gehen – nicht DSGVO-konform. Bitte nur Testinhalte sprechen, keine echten Patientendaten. Fortfahren?')) return;
+    mikroOk = true;
+  }
+  toast('');
+  let endText = '', alles = '';
+  hoerenVerworfen = false;
+  erkennung = new Erkennung();
+  erkennung.lang = 'de-DE';
+  erkennung.interimResults = true;
+  erkennung.continuous = false;
+  erkennung.maxAlternatives = 1;
+  erkennung.onresult = (e) => {
+    let zwischen = ''; endText = '';
+    for (const r of e.results) { if (r.isFinal) endText += r[0].transcript; else zwischen += r[0].transcript; }
+    alles = endText + zwischen;
+    $('live').textContent = alles || 'Ich höre zu …';
+  };
+  erkennung.onerror = (e) => {
+    if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+      toast('Das Mikrofon ist nicht freigegeben. Bitte im Browser erlauben (Schloss-Symbol neben der Adresse).', 'fehler');
+    } else if (e.error === 'no-speech') {
+      toast('Ich habe nichts gehört. Bitte noch einmal auf das Mikrofon tippen.');
+    } else if (e.error !== 'aborted') {
+      toast('Die Spracherkennung hat nicht funktioniert (' + e.error + ').', 'fehler');
+    }
+  };
+  erkennung.onend = () => {
+    hoertZu = false; erkennung = null; $('live').hidden = true; oberflaeche();
+    const text = (endText || alles).trim();
+    if (text && !hoerenVerworfen) sendeNachricht(text);
+    hoerenVerworfen = false;
+  };
+  hoertZu = true; oberflaeche();
+  $('live').textContent = 'Ich höre zu …'; $('live').hidden = false;
+  try { erkennung.start(); } catch { hoertZu = false; erkennung = null; $('live').hidden = true; oberflaeche(); }
+}
+
+async function sendeNachricht(text) {
+  toast('');
+  blase('nutzer', text);
+  const warte = blase('avatar', '…');
+  gespraechLaeuft = true; oberflaeche();
+  try {
+    const r = await api('POST', '/api/avatar/gespraech', { nachricht: text, verlauf });
+    warte.textContent = r.antwort;
+    verlauf.push({ rolle: 'nutzer', text }, { rolle: 'avatar', text: r.antwort });
+    verlauf = verlauf.slice(-12);
+    $('g-hinweis').textContent = r.hinweis || ('Antwort erzeugt von: ' + r.anbieter);
+    $('g-hinweis').hidden = false;
+    if (r.hinweis) toast(r.hinweis);
+    if (r.gesprochen && pc) {
+      avatarSpricht = true;
+      autoHoerenGeplant = true;
+      sprechTimer(r.antwort);
+    } else if (!r.gesprochen) {
+      toast('Der Avatar ist nicht verbunden – die Antwort erscheint nur als Text.');
+    }
+  } catch (err) {
+    warte.remove();
+    toast(err.message, 'fehler');
+  }
+  gespraechLaeuft = false; oberflaeche();
+}
+
+$('mikro').addEventListener('click', () => {
+  if (hoertZu && erkennung) { erkennung.stop(); return; }
+  startHoeren();
+});
+$('tipp-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const t = $('tipp').value.trim();
+  if (!t || gespraechLaeuft) return;
+  $('tipp').value = '';
+  sendeNachricht(t);
+});
+function gespraechLeeren() {
+  hoerenAbbrechen();
+  autoHoerenGeplant = false;
+  verlauf = []; $('verlauf').replaceChildren(); $('g-hinweis').hidden = true; toast('');
+}
+$('neu-gespraech').addEventListener('click', () => {
+  gespraechLeeren();
+  $('sheet-einstellungen').close();
+});
+oberflaeche();
+
+// Beim Verlassen der Seite die Verbindung bei D-ID beenden (spart Guthaben).
+window.addEventListener('pagehide', () => {
+  if (!pc && !verbindet) return;
+  fetch('/api/avatar/stop', { method: 'POST', keepalive: true, credentials: 'same-origin',
+    headers: { 'X-Requested-With': 'akki-app', 'Content-Type': 'application/json' }, body: '{}' });
+});
+
+// Beim Start: ist schon eine Sitzung aktiv?
+fetch('/api/me', { credentials: 'same-origin' })
+  .then((r) => (r.ok ? r.json() : Promise.reject()))
+  .then(zeigeApp).catch(zeigeLogin);
+</script>
+</body>
+</html>
