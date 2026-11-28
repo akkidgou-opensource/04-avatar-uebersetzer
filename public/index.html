@@ -6261,6 +6261,8 @@ function tonRampe(nach, fertig) {
   return takt;
 }
 function avatarTonKurzStumm() {
+  // iPhone: Lautstärke nicht regelbar → hartes Abschalten der Spur knackt. Dort nur D-ID unterbrechen lassen.
+  if (!volumenEinstellbar()) { try { avatarUnterbrochenZeigen(); } catch {} return; }
   const spuren = video.srcObject ? video.srcObject.getAudioTracks() : [];
   avatarTonFrei(true);
   avatarUnterbrochenZeigen();
@@ -6286,6 +6288,7 @@ function avatarTonFrei(sofort) {
   st.spuren.forEach((t) => { t.enabled = true; });
   tonRampe(1);
 }
+const PEGEL_UNTERBRECHEN = /[?&]pegelunterbrechen=1/.test(location.search);   // Standard AUS (Demo-Stabilität)
 function freihandVadStart(p) {
   if (AB === 'ohnepegel') { sprachDiag('freihand vad aus (ab=ohnepegel)'); return; }
   const ctx = fhCtx;
@@ -6381,7 +6384,9 @@ function freihandVadStart(p) {
     if (z.gesperrt && z.ruheSeit && jetzt - z.ruheSeit >= FH_NEU_MS) z.gesperrt = false;
     if (z.ueberSeit && jetzt - z.ueberSeit >= 120 && !ruhe && !mikroStumm) { fhSpracheBis = jetzt + 400; fhAktiv(); }   // Stimme erkannt
     hoerZustand();
-    if (z.ueberSeit && !z.gesperrt && !fhSchonung && !ruhe && !mikroStumm && db > schwelle && jetzt - z.ueberSeit >= FH_HALTEN_MS && jetzt - z.letzte >= FH_PAUSE_MS && (v2Laut || v2Lauf || gespraechLaeuft)) {
+    // Demo-Stabilität (Koordinator 28.11.): KEIN Unterbrechen nach Lautstärke mehr – Geräusche/Atmen/„ähm“ brachen Antworten ab und
+    // schnitten den Ton hart (Knacken). Unterbrochen wird nur noch per erkanntem Satz (freihandTranskript) oder per Stopp-Knopf.
+    if (PEGEL_UNTERBRECHEN && z.ueberSeit && !z.gesperrt && !fhSchonung && !ruhe && !mikroStumm && db > schwelle && jetzt - z.ueberSeit >= FH_HALTEN_MS && jetzt - z.letzte >= FH_PAUSE_MS && (v2Laut || v2Lauf || gespraechLaeuft)) {
       z.letzte = jetzt; z.gesperrt = true;
       window.__fhLetzte = { beginn: z.ueberSeit, ausgeloest: jetzt, db, schwelle };   // nur Zeiten/Pegel (Messung)
       freihandUnterbrechen(db, schwelle, z);
@@ -6451,6 +6456,11 @@ async function freihandTranskript(roh) {
       return;
     }
     text = frage;
+  }
+  // Demo-Stabilität: kurze Brocken („ok“, „ähm“, Geräusche) während einer laufenden Antwort brechen sie nicht mehr ab.
+  if ((gespraechLaeuft || v2Lauf || v2Laut || avatarSpricht) && (text.split(/\s+/).filter(Boolean).length < 3 || text.length < 12)) {
+    sprachDiag('freihand kurz verworfen zeichen=' + text.length);
+    return;
   }
   const jetzt = performance.now();
   // Bruchstück: D-ID trennt manchmal an kurzen Pausen („Danke,“ | „das reicht“). Kam der vorige Satz eben erst
@@ -6923,6 +6933,7 @@ async function zeigeDashboard() {
 const VORAB_MAX_MS = 3 * 60 * 1000;
 let vorab = false, vorabTimer = null;
 function vorabVerbinden() {
+  if (!/[?&]vorab=1/.test(location.search)) return;   // Demo-Stabilität: Standard AUS – verbunden wird beim Tipp auf „Mit mitano. reden“
   if (!ich || $('ansicht-dashboard').hidden || pc || verbindet || dashOeffnet || appImHintergrund()) return;
   const a = (aktuellerAvatar && aktuellerAvatar.id === profil.avatarId) ? aktuellerAvatar : gespeicherterAvatar();
   if (!a) return;
