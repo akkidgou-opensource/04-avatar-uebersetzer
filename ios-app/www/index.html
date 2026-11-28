@@ -93,13 +93,13 @@
     try { var u = new URL(a); return u.origin; } catch (e) { return null; }
   }
 
-  // Prüft mit 4 Sekunden Zeitlimit, ob der Server antwortet. Nativ (ohne CORS-Grenzen), sonst per fetch.
+  // Prüft mit 10 Sekunden Zeitlimit (Mobilnetz/Tunnel brauchen manchmal länger), ob der Server antwortet. Nativ (ohne CORS-Grenzen), sonst per fetch.
   function erreichbar(adresse) {
     var http = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorHttp;
-    var zeit = new Promise(function (ok) { setTimeout(function () { ok(false); }, 4000); });
+    var zeit = new Promise(function (ok) { setTimeout(function () { ok(false); }, 10000); });
     var test;
     if (http && http.request) {
-      test = http.request({ url: adresse + '/', method: 'GET', connectTimeout: 4000, readTimeout: 4000, responseType: 'text' })
+      test = http.request({ url: adresse + '/', method: 'GET', connectTimeout: 10000, readTimeout: 10000, responseType: 'text' })
         .then(function (r) { return r && r.status >= 200 && r.status < 500; }, function () { return false; });
     } else {
       test = fetch(adresse + '/', { mode: 'no-cors', cache: 'no-store' }).then(function () { return true; }, function () { return false; });
@@ -172,6 +172,8 @@
   if (!manuell) {
     $('auto').hidden = false;
     $('auto-adresse').textContent = 'suche mitano. …';
+    // Bis zu RUNDEN Durchgänge (2 s Pause dazwischen), erst danach das Formular mit „Erneut versuchen“.
+    var RUNDEN = 3, runde = 1;
     var fertig = false, offen = 0, wegFertig = false, geprueft = {};
     var versuche = function (a) {
       if (!a || fertig || abgebrochen || geprueft[a]) return;
@@ -187,17 +189,29 @@
     var pruefeEnde = function () {
       if (fertig || abgebrochen || !wegFertig || offen > 0) return;
       if (!geprueft[STANDARD]) { versuche(STANDARD); return; }
+      if (runde < RUNDEN) {
+        runde++;
+        $('auto-adresse').textContent = 'Verbinde … Versuch ' + runde + '/' + RUNDEN;
+        setTimeout(function () { if (!fertig && !abgebrochen) durchgang(); }, 2000);
+        return;
+      }
       zeigeFormular('Server nicht erreichbar – läuft der Mac und der Tunnel?');
+      $('auto-suchen').textContent = 'Erneut versuchen';
+      $('auto-suchen').hidden = false;
     };
-    versuche(gespeichert);
-    wegweiser().then(function (aktuell) { wegFertig = true; versuche(aktuell); pruefeEnde(); });
+    var durchgang = function () {
+      geprueft = {}; offen = 0; wegFertig = false;
+      versuche(gespeichert);
+      wegweiser().then(function (aktuell) { wegFertig = true; versuche(aktuell); pruefeEnde(); });
+    };
+    durchgang();
   } else {
     // „Server wechseln“ aus den Einstellungen: ohne Fehlermeldung. Sonst kam die Seite nicht (fehler.html).
     var wechseln = /[?&]wechseln=1/.test(location.search);
     zeigeFormular(wechseln ? '' : 'Die Seite konnte nicht geladen werden – läuft der Mac und der Tunnel?');
     $('auto-suchen').hidden = false;
-    $('auto-suchen').addEventListener('click', function () { location.replace('index.html'); });
   }
+  $('auto-suchen').addEventListener('click', function () { location.replace('index.html'); });
 })();
 </script>
 </body>

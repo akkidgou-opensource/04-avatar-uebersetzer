@@ -4534,12 +4534,33 @@ function v2Pruefe() {
 function v2TaktAn() {
   if (!v2Takt) v2Takt = setInterval(v2Pruefe, 100);
 }
+// A/B mikrozu: beim Sprechen Mikro zu, 700 ms nach dem Ende (wenn weiter still) wieder auf.
+let abMikroTimer = null;
+function abMikroUmschalten(laut) {
+  const p = pc;
+  clearTimeout(abMikroTimer);
+  if (!p || !p.v2) return;
+  if (laut) {
+    if (!freihand || abMikroZu) return;
+    abMikroZu = true; sprachDiag('ab mikro zu');
+    p.raum.localParticipant.setMicrophoneEnabled(false).catch(() => {});
+  } else if (abMikroZu) {
+    abMikroTimer = setTimeout(() => {
+      if (pc !== p || v2Laut) return;
+      abMikroZu = false;
+      if (!freihand) return;
+      sprachDiag('ab mikro auf');
+      p.raum.localParticipant.setMicrophoneEnabled(true, FH_MIKRO_OPT).catch(() => {});
+    }, 700);
+  }
+}
 function v2Hoerbar(laut) {
   if (laut === v2Laut) return;
   v2Laut = laut;
   v2Merke(laut ? 'ton an' : 'ton aus');
   const jetzt = performance.now();
   if (laut) v2LautSeit = jetzt; else v2StillSeit = jetzt;
+  if (AB === 'mikrozu') abMikroUmschalten(laut);
   // Mikrofon nie, während der Avatar spricht (sonst hört die Spracherkennung den Avatar selbst → Echo-Nachricht).
   if (laut && hoertZu) { v2Merke('zuhoeren abgebrochen (avatar spricht)'); hoerenAbbrechen(); }
   const l = v2Lauf;
@@ -4925,7 +4946,9 @@ function avatarTonSetzen(an) {
 }
 window.avatarTonSetzen = avatarTonSetzen;
 window.avatarTonAn = () => !tonAus();
-try { if (localStorage.getItem('mitano-ton') === 'aus') $('ton-an').checked = false; } catch {}
+// Koordinator 28.11.: Ton ist bei JEDEM App-Start an (ein früher ausgeschalteter Lautsprecher bleibt nicht hängen).
+try { localStorage.removeItem('mitano-ton'); } catch {}
+$('ton-an').checked = true;
 $('ton-an').addEventListener('change', () => avatarTonSetzen($('ton-an').checked));
 // Ton freigeben: SYNCHRON im Tipp aufrufen (kein await davor), sonst lässt WebKit den Ton nicht zu.
 function avatarTonFreigeben(grund) {
@@ -5068,11 +5091,25 @@ const NativSprache = window.Capacitor?.isNativePlatform?.() ? window.Capacitor.P
 let nativRechte = null;   // Rechte nur einmal pro App-Start anfragen
 // Nur technische Codes an den Server melden (nie erkannter Text), damit Fehler am iPhone sichtbar werden.
 // Geräte-Kennung je Seitenaufruf (Diagnose): g=<4 Zeichen> p=ios|sim|safari|chrome|web (sim: iOS-App mit > 6 Kernen = Mac).
+// A/B-Test Knacken (28.11., Präsentation): ?ab=normal|ohnepegel|mikrozu|ohneecho (gemerkt in localStorage 'mitano-ab').
+//  ohnepegel: kein AudioContext/Analyser und keine Sender-getStats (kein eigenes Barge-in; Unterbrechen per Stopp/Tippen bzw. D-ID).
+//  mikrozu:   LiveKit-Mikro geschlossen, solange mitano. spricht (prüft Voice-Processing als Ursache).
+//  ohneecho:  Mikro ohne Echo-Unterdrückung/Rauschfilter/Pegelregelung (schaltet iOS-Voice-Processing ab).
+const AB = (() => {
+  const gueltig = ['normal', 'ohnepegel', 'mikrozu', 'ohneecho'];
+  try {
+    const q = new URLSearchParams(location.search).get('ab');
+    if (gueltig.includes(q)) localStorage.setItem('mitano-ab', q);
+    const w = localStorage.getItem('mitano-ab');
+    return gueltig.includes(w) ? w : 'normal';
+  } catch { return 'normal'; }
+})();
+let abMikroZu = false;   // mikrozu: Mikro gerade wegen Sprechen geschlossen
 const DIAG_GERAET = (() => {
   const g = Math.random().toString(36).slice(2, 6);
   const ua = navigator.userAgent, nativ = !!window.Capacitor?.isNativePlatform?.(), kerne = navigator.hardwareConcurrency || 0;
   const p = nativ ? (kerne > 6 ? 'sim' : 'ios') : /CriOS|Chrome/.test(ua) ? 'chrome' : /Safari/.test(ua) && /iPhone|iPad|Macintosh/.test(ua) ? 'safari' : 'web';
-  return 'g=' + g + ' p=' + p;
+  return 'g=' + g + ' p=' + p + ' ab=' + AB;
 })();
 // AudioContext nur wecken, wenn er nicht schon läuft (jedes resume() lässt iOS die Audio-Sitzung neu bewerten → Knacken).
 function ctxWecken(c) { try { if (c && c.state !== 'running') c.resume().catch(() => {}); } catch {} }
@@ -6145,7 +6182,8 @@ const FH_ABSTAND_ECHO_DB = 10;   // so viel lauter als das gelernte Rest-Echo
 const FH_PAUSE_MS = 1500;        // nach einer Unterbrechung kurz nicht erneut auslösen
 const FH_NEU_MS = 500;           // … und erst wieder nach so viel Ruhe (derselbe Satz löst nicht zweimal aus)
 const FH_STUMM_MS = 1000;        // nach dem Unterbrechen mitanos Ton so lange hier stumm (bis D-ID wirklich aufhört)
-const FH_MIKRO_OPT = { echoCancellation: true, noiseSuppression: true, autoGainControl: true };
+const FH_MIKRO_OPT = AB === 'ohneecho' ? { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
+  : { echoCancellation: true, noiseSuppression: true, autoGainControl: true };
 let freihandStartet = false;     // Einschalten läuft (Doppeltippen abfangen)
 let freihandPausiert = false;    // war an, ruht wegen Hintergrund/Anruf; kommt von selbst wieder
 let fhCtx = null;                // EIN Audio-Kontext für die Pegelmessung (iPhone erlaubt nur wenige)
@@ -6157,7 +6195,7 @@ async function freihandAn(leise) {
   freihandStartet = true; freihandPausiert = false;
   // Audio-Kontext jetzt anlegen bzw. wecken (beim Antippen erlaubt das iPhone das sicher).
   const Ctx = window.AudioContext || window.webkitAudioContext;
-  try { if (!fhCtx && Ctx) fhCtx = new Ctx(); ctxWecken(fhCtx); } catch { fhCtx = null; }
+  try { if (AB !== 'ohnepegel') { if (!fhCtx && Ctx) fhCtx = new Ctx(); ctxWecken(fhCtx); } } catch { fhCtx = null; }
   try {
     await p.raum.localParticipant.setMicrophoneEnabled(true, FH_MIKRO_OPT);
   } catch (e) {
@@ -6188,7 +6226,7 @@ function freihandAus(stumm, leise) {
   if (!leise) freihandPausiert = false;
   if (stumm && pc) lkMikroFreigeben(pc);   // Verbindung geht weg: Spur sicher beenden, bevor das Plugin startet
   if (!freihand) return;
-  freihand = false;
+  freihand = false; abMikroZu = false; clearTimeout(abMikroTimer);
   if (freihandVad) { freihandVad.stopp(); freihandVad = null; }
   // Pegel-Kontext anhalten, solange nicht zugehört wird (eine laufende AudioContext-Ausgabe mehr belastet die iPhone-Audio-Sitzung).
   // Nur ohne Avatar-Verbindung anhalten: suspend()/resume() während der Verbindung baut die iPhone-Ausgabe um (Klick).
@@ -6249,6 +6287,7 @@ function avatarTonFrei(sofort) {
   tonRampe(1);
 }
 function freihandVadStart(p) {
+  if (AB === 'ohnepegel') { sprachDiag('freihand vad aus (ab=ohnepegel)'); return; }
   const ctx = fhCtx;
   if (!ctx) { sprachDiag('freihand kein-audio'); return; }
   ctxWecken(ctx);
@@ -6283,7 +6322,7 @@ function freihandVadStart(p) {
   const z = { boden: -70, echo: -90, ueberSeit: 0, unterSeit: 0, letzte: 0, echoMax: -120, avatarVorher: false, bodenStart: true,
     lautBis: 0, neustartUm: 0, weckenUm: 0, neustarts: 0, db: -120, schwelle: 0, gesperrt: false, ruheSeit: 0 };
   const takt = setInterval(() => {
-    if (pc !== p || !freihand) return;
+    if (pc !== p || !freihand || abMikroZu) return;   // abMikroZu: A/B mikrozu (Mikro absichtlich zu)
     const jetzt = performance.now();
     anschliessen();
     // Wächter: Aufnahme beendet (Anruf, Gerätewechsel) → Mikrofon neu starten.
@@ -6353,6 +6392,7 @@ function freihandVadStart(p) {
 // Aufnahme ist abgerissen (Anruf, Kopfhörer, iOS-Audio-Unterbrechung): Mikrofon aus und wieder an. Klappt das
 // dreimal nicht, Freihand sauber beenden (keine hängende Anzeige „Hört zu …“).
 async function freihandMikroNeu(p, z) {
+  if (abMikroZu) return;   // A/B mikrozu: absichtlich geschlossen
   // Nie während mitano. spricht: Mikro aus/an schaltet die iOS-Audio-Sitzung um (Knacken). Der Wächter versucht es später.
   if (v2Laut || avatarSpricht) return;
   z.neustarts++;
@@ -6487,6 +6527,7 @@ function wachTon() {
   if (window.__scanLaeuft) return;
   try {
     const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (AB === 'ohnepegel') return;
     if (!fhCtx && Ctx) fhCtx = new Ctx();
     const c = fhCtx; if (!c) return;
     ctxWecken(c);
@@ -6692,7 +6733,7 @@ document.addEventListener('pointerdown', () => {
   // Beim (ersten) Tippen – z. B. auf „Mit mitano. reden“ – den Pegel-Kontext anlegen bzw. wecken (iPhone erlaubt das nur im Tipp).
   try {
     const Ctx = window.AudioContext || window.webkitAudioContext;
-    if (!fhCtx && Ctx && ich) fhCtx = new Ctx();
+    if (!fhCtx && Ctx && ich && AB !== 'ohnepegel') fhCtx = new Ctx();
     if (fhCtx && fhCtx.state !== 'running') fhCtx.resume().catch(() => {});
   } catch {}
 }, { passive: true, capture: true });
