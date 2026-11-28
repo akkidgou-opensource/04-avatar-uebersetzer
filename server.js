@@ -222,7 +222,9 @@ async function istKrise(roh, nachricht, warten = true) {
   const k = roh.kriseVorlauf; roh.kriseVorlauf = null;
   if (!k || k.nachricht !== nachricht) return null;
   roh.kriseLetzte = k;
-  const art = (x) => (KRISEN_ARTEN.includes(x) ? x : null);
+  // Demo-Fix 28.11.: körperliche Krise NUR über eindeutige Stichworte (oben), nicht per KI-Einschätzung –
+  // Fragen zur Vorgeschichte („Wann war ich wegen dem Herzinfarkt im Krankenhaus?“) lösten sonst Fehlalarm aus.
+  const art = (x) => (x === 'seelisch' ? x : null);
   if (k.ergebnis !== undefined || !warten) return art(k.ergebnis);
   const rest = Math.max(0, k.start + KRISE_WARTE_MS - Date.now());
   return art(await Promise.race([k.p, new Promise((ok) => setTimeout(() => ok(null), rest))]));
@@ -1460,7 +1462,7 @@ async function waehleWeg({ nachricht, verlauf, titel, stand, patientId = null, g
     const antwortText = ((daten?.content || []).find((b) => b.type === 'text')?.text || '').trim();
     const code = antwortText.charAt(0).toUpperCase();
     if (antwortText.includes('!')) return { ...fertig('claude', 'krise', 'ki'), krise: 'seelisch' };
-    if (antwortText.includes('+')) return { ...fertig('claude', 'krise', 'ki'), krise: 'koerperlich' };
+    // '+' (körperlich) der KI-Weiche wird nicht mehr als Krise gewertet (Demo-Fix 28.11.) – nur Stichworte lösen das aus.
     if (!WEG_CODES[code]) return rueckfall('fehler');
     return fertig(WEG_CODES[code][0], WEG_CODES[code][1], 'ki');
   } catch (e) {
