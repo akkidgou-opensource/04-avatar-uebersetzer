@@ -5103,7 +5103,9 @@ const AB = (() => {
   const gueltig = ['normal', 'ohnepegel', 'mikrozu', 'ohneecho'];
   try {
     const q = new URLSearchParams(location.search).get('ab');
-    if (gueltig.includes(q)) localStorage.setItem('mitano-ab', q);
+    if (gueltig.includes(q)) { localStorage.setItem('mitano-ab', q); return q; }
+    // Demo-Fix 28.11.: In der iPhone-App standardmäßig OHNE Web-Audio (AudioContext neben dem WebRTC-Gespräch knackt auf iOS).
+    if (window.Capacitor?.isNativePlatform?.()) return 'ohnepegel';
     const w = localStorage.getItem('mitano-ab');
     return gueltig.includes(w) ? w : 'normal';
   } catch { return 'normal'; }
