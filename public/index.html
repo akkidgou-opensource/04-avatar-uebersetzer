@@ -6677,6 +6677,22 @@ async function begruessen(p) {
   } catch { return false; }   // Endpunkt fehlt oder Fehler: ohne Begrüßung gleich zuhören
 }
 // Regler: stellt den gewünschten Zustand her (Freihand an, Ruhemodus, Stumm, Hintergrund).
+// Erster Mikro-Start (getUserMedia) schaltet auf dem iPhone die Audio-Sitzung um. Deshalb einmal vor der Begrüßung starten
+// und sofort stumm schalten: LiveKit behält die Aufnahme beim Stummschalten, späteres Freischalten ist nur noch Entstummen.
+function mikroVorhanden() {
+  try { const pub = pc && pc.v2 && pc.raum ? pc.raum.localParticipant.getTrackPublication(window.LivekitClient.Track.Source.Microphone) : null; return !!(pub && pub.track); } catch { return false; }
+}
+async function mikroVorwaermen(p) {
+  try {
+    if (!p || !p.v2 || !p.raum) return;
+    const lp = p.raum.localParticipant;
+    const pub = lp.getTrackPublication(window.LivekitClient.Track.Source.Microphone);
+    if (pub && pub.track) return;   // Aufnahme besteht schon
+    await lp.setMicrophoneEnabled(true, FH_MIKRO_OPT);
+    if (!freihand && !freihandStartet) await lp.setMicrophoneEnabled(false);
+    sprachDiag('mikro vorgewaermt');
+  } catch (e) { sprachDiag('mikro vorwaermen fehler ' + ((e && e.name) || '')); }
+}
 function fhRegler() {
   if (window.__scanLaeuft) return;   // Scanner offen: Zuhören ruht (scanne() stellt es danach wieder her)
   const jetzt = performance.now();
@@ -6694,7 +6710,14 @@ function fhRegler() {
   // Neue Verbindung: Schonzeit, bis mitano. die Begrüßung fertig gesprochen hat (sein Echo darf sie nicht abbrechen).
   if (verbunden && imGespraech && fhVerbindung !== pc) {
     fhVerbindung = pc; fhSchonung = true; fhSchonungSeit = jetzt; fhSchonungLaut = false;
-    begruessen(pc).then((gesprochen) => { if (!gesprochen && fhVerbindung === pc) fhSchonung = false; });   // ohne Begrüßung gleich zuhören
+    // Koordinator 28.11.: Mikro VOR der Begrüßung einmal starten (Stille) und gleich stumm schalten – der Wechsel der
+    // iOS-Audio-Sitzung (nur Wiedergabe → Wiedergabe+Aufnahme) passiert so nicht mehr mitten in mitanos Sprechen (Knacken).
+    const p0 = pc;
+    mikroVorwaermen(p0).then(() => {
+      if (pc !== p0 || fhVerbindung !== p0) return;
+      fhSchonungSeit = performance.now();
+      return begruessen(p0).then((gesprochen) => { if (!gesprochen && fhVerbindung === p0) fhSchonung = false; });   // ohne Begrüßung gleich zuhören
+    });
   }
   if (fhSchonung) {
     if (v2Laut) fhSchonungLaut = true;
@@ -6720,7 +6743,8 @@ function fhRegler() {
   }
   // Mikro erst frei, wenn das Gespräch sichtbar ist UND die Begrüßung fertig gesprochen ist (Schonzeit vorbei).
   // Mikro nie einschalten, während mitano. spricht (schaltet die iOS-Audio-Sitzung um → Knacken)
-  if (verbunden && imGespraech && !fhSchonung && !freihand && !hoertZu && !v2Laut && !avatarSpricht && jetzt >= fhAutoSperreBis) freihandAn(true);
+  // Ist die Aufnahme vorgewärmt, ist Freischalten nur Entstummen (kein Sitzungswechsel) → auch während mitano. spricht erlaubt.
+  if (verbunden && imGespraech && !fhSchonung && !freihand && !hoertZu && (mikroVorhanden() || (!v2Laut && !avatarSpricht)) && jetzt >= fhAutoSperreBis) freihandAn(true);
   const kannRuhen = freihand || (!pc && !verbindet && !!letzterAvatar);
   // window.__ruheNachMs nur für Messungen (kürzere Wartezeit, spart D-ID-Guthaben)
   if (kannRuhen && !beschaeftigt && jetzt - fhAktivUm >= (window.__ruheNachMs || RUHE_NACH_MS)) ruheAn('still');
