@@ -5101,16 +5101,18 @@ let nativRechte = null;   // Rechte nur einmal pro App-Start anfragen
 //  mikrozu:   LiveKit-Mikro geschlossen, solange mitano. spricht (prüft Voice-Processing als Ursache).
 //  ohneecho:  Mikro ohne Echo-Unterdrückung/Rauschfilter/Pegelregelung (schaltet iOS-Voice-Processing ab).
 const AB = (() => {
-  const gueltig = ['normal', 'ohnepegel', 'mikrozu', 'ohneecho'];
+  const gueltig = ['normal', 'ohnepegel', 'mikrozu', 'ohneecho', 'app'];
   try {
     const q = new URLSearchParams(location.search).get('ab');
     if (gueltig.includes(q)) { localStorage.setItem('mitano-ab', q); return q; }
     // Demo-Fix 28.11.: In der iPhone-App standardmäßig OHNE Web-Audio (AudioContext neben dem WebRTC-Gespräch knackt auf iOS).
-    if (window.Capacitor?.isNativePlatform?.()) return 'ohnepegel';
+    if (window.Capacitor?.isNativePlatform?.()) return 'app';   // App: ohne iOS-Echoverarbeitung, ohne Web-Audio, Mikro stumm während mitano. spricht
     const w = localStorage.getItem('mitano-ab');
     return gueltig.includes(w) ? w : 'normal';
   } catch { return 'normal'; }
 })();
+const OHNE_PEGEL = AB === 'ohnepegel' || AB === 'app';
+const OHNE_ECHO = AB === 'ohneecho' || AB === 'app';
 let abMikroZu = false;   // mikrozu: Mikro gerade wegen Sprechen geschlossen
 const DIAG_GERAET = (() => {
   const g = Math.random().toString(36).slice(2, 6);
@@ -6189,7 +6191,7 @@ const FH_ABSTAND_ECHO_DB = 10;   // so viel lauter als das gelernte Rest-Echo
 const FH_PAUSE_MS = 1500;        // nach einer Unterbrechung kurz nicht erneut auslösen
 const FH_NEU_MS = 500;           // … und erst wieder nach so viel Ruhe (derselbe Satz löst nicht zweimal aus)
 const FH_STUMM_MS = 1000;        // nach dem Unterbrechen mitanos Ton so lange hier stumm (bis D-ID wirklich aufhört)
-const FH_MIKRO_OPT = AB === 'ohneecho' ? { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
+const FH_MIKRO_OPT = OHNE_ECHO ? { echoCancellation: false, noiseSuppression: false, autoGainControl: false }
   : { echoCancellation: true, noiseSuppression: true, autoGainControl: true };
 let freihandStartet = false;     // Einschalten läuft (Doppeltippen abfangen)
 let freihandPausiert = false;    // war an, ruht wegen Hintergrund/Anruf; kommt von selbst wieder
@@ -6202,7 +6204,7 @@ async function freihandAn(leise) {
   freihandStartet = true; freihandPausiert = false;
   // Audio-Kontext jetzt anlegen bzw. wecken (beim Antippen erlaubt das iPhone das sicher).
   const Ctx = window.AudioContext || window.webkitAudioContext;
-  try { if (AB !== 'ohnepegel') { if (!fhCtx && Ctx) fhCtx = new Ctx(); ctxWecken(fhCtx); } } catch { fhCtx = null; }
+  try { if (!OHNE_PEGEL) { if (!fhCtx && Ctx) fhCtx = new Ctx(); ctxWecken(fhCtx); } } catch { fhCtx = null; }
   try {
     await p.raum.localParticipant.setMicrophoneEnabled(true, FH_MIKRO_OPT);
   } catch (e) {
@@ -6297,7 +6299,7 @@ function avatarTonFrei(sofort) {
 }
 const PEGEL_UNTERBRECHEN = /[?&]pegelunterbrechen=1/.test(location.search);   // Standard AUS (Demo-Stabilität)
 function freihandVadStart(p) {
-  if (AB === 'ohnepegel') { sprachDiag('freihand vad aus (ab=ohnepegel)'); return; }
+  if (OHNE_PEGEL) { sprachDiag('freihand vad aus (ab=' + AB + ')'); return; }
   const ctx = fhCtx;
   if (!ctx) { sprachDiag('freihand kein-audio'); return; }
   ctxWecken(ctx);
@@ -6544,7 +6546,7 @@ function wachTon() {
   if (window.__scanLaeuft) return;
   try {
     const Ctx = window.AudioContext || window.webkitAudioContext;
-    if (AB === 'ohnepegel') return;
+    if (OHNE_PEGEL) return;
     if (!fhCtx && Ctx) fhCtx = new Ctx();
     const c = fhCtx; if (!c) return;
     ctxWecken(c);
@@ -6768,13 +6770,34 @@ function fhRegler() {
   hoerZustand();
 }
 setInterval(fhRegler, 500);
+// Modus 'app' (iPhone-App, Demo-Fix 28.11.): ohne iOS-Echoverarbeitung würde das Mikro mitano. selbst hören.
+// Deshalb ist es stumm (LiveKit-Stumm, Aufnahme läuft weiter → kein Sitzungswechsel), solange mitano. spricht oder eine
+// Antwort vorbereitet wird; 700 ms nach dem Ende wieder offen. Unterbrechen: Stopp-Knopf.
+let appMikroZu = false, appMikroStillSeit = 0;
+if (AB === 'app') setInterval(() => {
+  const p = pc;
+  if (!p || !p.v2 || !freihand) { appMikroZu = false; return; }
+  const beschaeftigt = v2Laut || avatarSpricht || !!v2Lauf || gespraechLaeuft;
+  const jetzt = performance.now();
+  if (beschaeftigt) {
+    appMikroStillSeit = 0;
+    if (!appMikroZu) { appMikroZu = true; sprachDiag('app mikro zu'); p.raum.localParticipant.setMicrophoneEnabled(false).catch(() => {}); }
+  } else if (appMikroZu) {
+    if (!appMikroStillSeit) appMikroStillSeit = jetzt;
+    if (jetzt - appMikroStillSeit >= 700 && !mikroStumm) {
+      appMikroZu = false; sprachDiag('app mikro auf');
+      p.raum.localParticipant.setMicrophoneEnabled(true, FH_MIKRO_OPT).catch(() => {});
+    }
+  }
+}, 100);
+
 // Freihand startet jetzt ohne Antippen: Falls das iPhone den Pegel-Kontext deshalb noch angehalten hat, bei der
 // nächsten Berührung wecken (sonst fehlt das Unterbrechen per Stimme).
 document.addEventListener('pointerdown', () => {
   // Beim (ersten) Tippen – z. B. auf „Mit mitano. reden“ – den Pegel-Kontext anlegen bzw. wecken (iPhone erlaubt das nur im Tipp).
   try {
     const Ctx = window.AudioContext || window.webkitAudioContext;
-    if (!fhCtx && Ctx && ich && AB !== 'ohnepegel') fhCtx = new Ctx();
+    if (!fhCtx && Ctx && ich && !OHNE_PEGEL) fhCtx = new Ctx();
     if (fhCtx && fhCtx.state !== 'running') fhCtx.resume().catch(() => {});
   } catch {}
 }, { passive: true, capture: true });
