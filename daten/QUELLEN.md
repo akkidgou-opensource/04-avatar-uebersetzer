@@ -4,6 +4,7 @@
 | Ordner | Inhalt | Herkunft und Lizenz |
 |---|---|---|
 | `grascco/` | 62 synthetische deutsche Arztbriefe, alle Namen und Daten frei erfunden | [GraSCCo, Zenodo 10.5281/zenodo.6539131](https://doi.org/10.5281/zenodo.6539131), CC BY 4.0 |
+| `grascco-2027/` | Kopie von `grascco/` mit verschobenen Datumsangaben (pro Brief fester Jahres-Versatz, alle Daten bis 2027; Test-Patient p2 über 2019–2027 verteilt). Erzeugt mit `node werkzeuge/daten-datieren.js`, wird für Test-Patienten genutzt | wie `grascco/`, CC BY 4.0, geändert: Datumsangaben verschoben |
 | `multigrascco/` | Dieselben Briefe (63 je Sprache) in 10 Sprachen, ein Unterordner je Sprache: Arabisch, Deutsch, Englisch, Französisch, Italienisch, Persisch, Polnisch, Russisch, Türkisch, Ukrainisch | [MultiGraSCCo, Zenodo 10.5281/zenodo.19489040](https://doi.org/10.5281/zenodo.19489040), CC BY 4.0 |
 
 Die Ordner in `multigrascco/` tragen die englischen Sprachnamen des Datensatzes (z. B. `Turkish`, `Ukrainian`). Derselbe Brief hat in jeder Sprache denselben Dateinamen, z. B. `Sudeck.txt`.

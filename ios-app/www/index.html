@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fbf6ee">
+<title>mitano. – Start</title>
+<style>
+  :root { --creme: #fbf6ee; --text: #2b2620; --text-2: #5a5148; --akzent: #7a4512; --rot: #b3261e; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    font: 17px/1.45 -apple-system, system-ui, sans-serif; color: var(--text);
+    background-color: #fbf6f1;
+    /* Team-Ebene (Vorlage design/vorlagen-team-28-11/Anmeldung) */
+    background-image: radial-gradient(circle at 12% 6%, rgba(78,191,239,.30) 0%, rgba(78,191,239,0) 42%), radial-gradient(circle at 95% 38%, rgba(247,167,146,.50) 0%, rgba(247,167,146,0) 48%), radial-gradient(circle at 5% 88%, rgba(255,210,190,.95) 0%, rgba(255,210,190,0) 55%), linear-gradient(170deg, #F4F8FC 0%, #FFFFFF 40%, #FFF3EC 100%);
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: calc(24px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));
+    -webkit-user-select: none; user-select: none;
+  }
+  .karte { width: 100%; max-width: 420px; background: rgba(255,255,255,.55); -webkit-backdrop-filter: blur(24px) saturate(1.5); backdrop-filter: blur(24px) saturate(1.5);
+    border: 1px solid rgba(255,255,255,.75); border-radius: 28px; padding: 26px 22px; box-shadow: 0 10px 30px rgba(80,50,20,.10), 0 2px 6px rgba(80,50,20,.06); text-align: center; }
+  .logo { -webkit-touch-callout: none; width: 112px; height: 112px; border-radius: 25px; margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; overflow: hidden;
+    background: radial-gradient(circle at 18% 10%, rgba(78,191,239,.22) 0%, rgba(78,191,239,0) 55%), linear-gradient(145deg, #E6F1FA 0%, #FFFFFF 42%, #FFF3EC 70%, #FFDCCB 100%);
+    box-shadow: 0 8px 22px rgba(168,65,44,.18); }
+  .logo svg { width: 112px; height: 112px; filter: drop-shadow(0 2px 5px rgba(168,65,44,.22)); pointer-events: none; }
+  .marke { font-family: Inter, -apple-system, system-ui, sans-serif; font-weight: 800; letter-spacing: -.02em; color: #0A0A0A; }
+  .marke span { color: #E9806A; }
+  h1 { font-family: ui-rounded, "SF Pro Rounded", -apple-system, sans-serif; font-size: 30px; letter-spacing: -.01em; margin: 0 0 6px; }
+  p { margin: 0 0 16px; color: var(--text-2); }
+  label { display: block; text-align: left; font-weight: 600; font-size: 15px; margin: 0 0 6px 4px; }
+  input { width: 100%; font: inherit; font-size: 16px; padding: 13px 14px; border-radius: 16px; border: 1px solid rgba(80,50,20,.14);
+    background: rgba(255,255,255,.85); color: var(--text); -webkit-user-select: text; user-select: text; }
+  input:focus { outline: 3px solid rgba(201,120,40,.4); outline-offset: 1px; }
+  /* Knöpfe wie in der Web-App: luftiges Bernstein-Glas mit dunkler Schrift. */
+  button { font: inherit; font-weight: 650; font-size: 16.5px; min-height: 52px; padding: 0 22px; width: 100%; margin-top: 12px; cursor: pointer;
+    border-radius: 999px; border: 1px solid rgba(255,255,255,.8); color: #3b2410;
+    -webkit-backdrop-filter: blur(18px) saturate(180%); backdrop-filter: blur(18px) saturate(180%);
+    transition: transform .18s cubic-bezier(.3,.7,.4,1), opacity .2s ease; }
+  button:active:not(:disabled) { transform: scale(.96); }
+  .haupt { background: linear-gradient(180deg, rgba(255,236,210,.82) 0%, rgba(250,196,140,.62) 100%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.95), inset 0 -10px 18px rgba(255,170,90,.22), 0 8px 22px rgba(201,120,40,.18), 0 1px 3px rgba(80,50,20,.08); }
+  .haupt:disabled { opacity: .55; }
+  .leise { background: rgba(255,255,255,.7); color: var(--text); box-shadow: inset 0 1px 0 rgba(255,255,255,.95), 0 6px 18px rgba(150,90,30,.13), 0 1px 3px rgba(80,50,20,.08); }
+  .status { min-height: 24px; margin: 14px 0 0; font-size: 15px; color: var(--text-2); }
+  .status.fehler { color: var(--rot); font-weight: 600; }
+  .lade { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(80,50,20,.2); border-top-color: var(--akzent);
+    border-radius: 50%; animation: dreh 0.8s linear infinite; vertical-align: -2px; margin-right: 8px; }
+  @keyframes dreh { to { transform: rotate(360deg); } }
+  [hidden] { display: none !important; }
+  .fuss { margin-top: 16px; font-size: 13px; color: var(--text-2); text-align: center; max-width: 420px; }
+</style>
+</head>
+<body>
+<main class="karte">
+  <div class="logo"><svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="lf" x1="0" y1="0" x2="0.4" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#FFE6DA"/></linearGradient><linearGradient id="lh" x1="0" y1="0" x2="0.6" y2="1"><stop offset="0" stop-color="#F7A792"/><stop offset="1" stop-color="#E9806A"/></linearGradient></defs><path d="M50 16 a33 33 0 1 1 -18.5 60.4 L15 84 l6 -16 A33 33 0 0 1 50 16 Z" fill="url(#lf)"/><path d="M25 33 C25 14 37 7 50 7 C63 7 75 14 75 33 Z" fill="url(#lh)"/><rect x="21" y="27" width="58" height="10" rx="5" fill="url(#lh)"/><circle cx="40" cy="50" r="3.8" fill="#7E3A2B"/><circle cx="60" cy="50" r="3.8" fill="#7E3A2B"/><path d="M44 56 Q50 54 56 56 Q57 59.5 50 62 Q43 59.5 44 56 Z" fill="#7E3A2B"/><circle cx="82" cy="78" r="5" fill="#E9806A"/></svg></div>
+  <h1 class="marke">mitano<span>.</span></h1>
+
+  <section id="auto" hidden>
+    <p>Ich verbinde mit dem Server …</p>
+    <div class="status"><span class="lade"></span><span id="auto-adresse"></span></div>
+    <button id="andere" type="button" class="leise">Andere Adresse</button>
+  </section>
+
+  <form id="formular" novalidate hidden>
+    <p>Gib die Adresse des Servers ein. Sie steht am Mac in der Ausgabe des Tunnels.</p>
+    <label for="adresse">Server-Adresse</label>
+    <input id="adresse" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://….trycloudflare.com">
+    <button id="verbinden" type="submit" class="haupt">Verbinden</button>
+    <button id="auto-suchen" type="button" class="leise" hidden>Automatisch suchen</button>
+    <div id="status" class="status" role="status" aria-live="polite"></div>
+  </form>
+</main>
+<div class="fuss">Die App holt ihre Oberfläche vom Server des Teams. Nur erfundene Testdaten verwenden.</div>
+
+<script>
+(function () {
+  var STANDARD = 'https://persian-keeping-stephanie-von.trycloudflare.com';
+  // Wegweiser: geheimes GitHub-Gist mit der jeweils aktuellen Tunnel-Adresse (der Wächter am Mac aktualisiert es).
+  var WEGWEISER = 'https://gist.githubusercontent.com/akkidgou-opensource/5cc71a70c848b196d5252d18a7939313/raw/mitano-adresse.json';
+  var SCHLUESSEL = 'kumpel-server-adresse';
+  var ERLAUBT = /(^|\.)trycloudflare\.com$|\.local$/i;   // muss zu allowNavigation in capacitor.config.json passen
+  var $ = function (id) { return document.getElementById(id); };
+  var abgebrochen = false;
+
+  function lies() { try { return localStorage.getItem(SCHLUESSEL) || ''; } catch (e) { return ''; } }
+  function merke(a) { try { localStorage.setItem(SCHLUESSEL, a); } catch (e) {} }
+
+  function normiere(roh) {
+    var a = String(roh || '').replace(/[\s\u0000-\u001f\u007f\u200b-\u200d\ufeff]+/g, '');
+    if (!a) return null;
+    if (!/^https?:\/\//i.test(a)) a = (/^[^\/]+\.local(:\d+)?(\/|$)/i.test(a) ? 'http://' : 'https://') + a;   // Mac im Netz: http, Tunnel: https
+    try { var u = new URL(a); return u.origin; } catch (e) { return null; }
+  }
+
+  // Prüft mit 4 Sekunden Zeitlimit, ob der Server antwortet. Nativ (ohne CORS-Grenzen), sonst per fetch.
+  function erreichbar(adresse) {
+    var http = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorHttp;
+    var zeit = new Promise(function (ok) { setTimeout(function () { ok(false); }, 4000); });
+    var test;
+    if (http && http.request) {
+      test = http.request({ url: adresse + '/', method: 'GET', connectTimeout: 4000, readTimeout: 4000, responseType: 'text' })
+        .then(function (r) { return r && r.status >= 200 && r.status < 500; }, function () { return false; });
+    } else {
+      test = fetch(adresse + '/', { mode: 'no-cors', cache: 'no-store' }).then(function () { return true; }, function () { return false; });
+    }
+    return Promise.race([test, zeit]);
+  }
+
+  function zeigeFormular(meldung) {
+    $('auto').hidden = true; $('formular').hidden = false;
+    $('adresse').value = lies() || STANDARD;
+    $('status').textContent = meldung || '';
+    $('status').className = 'status' + (meldung ? ' fehler' : '');
+    $('verbinden').disabled = false;
+  }
+
+  function verbinde(adresse) { window.location.href = adresse + '/'; }
+
+  $('formular').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var a = normiere($('adresse').value);
+    if (!a) { zeigeFormular('Das sieht nicht wie eine Adresse aus. Beispiel: https://….trycloudflare.com'); return; }
+    if (!ERLAUBT.test(new URL(a).hostname)) {
+      zeigeFormular('Diese Adresse ist in der App nicht freigegeben. Erlaubt sind …trycloudflare.com und …local.'); $('adresse').value = a; return;
+    }
+    $('adresse').value = a;
+    $('verbinden').disabled = true;
+    $('status').className = 'status'; $('status').innerHTML = '<span class="lade"></span>Prüfe Verbindung …';
+    erreichbar(a).then(function (ok) {
+      if (ok) { merke(a); verbinde(a); }
+      else { zeigeFormular('Server nicht erreichbar – läuft der Mac und der Tunnel?'); $('adresse').value = a; }
+    });
+  });
+
+  // Beim Antippen alles markieren: neue Tunnel-Adresse einfach drüberschreiben oder einfügen.
+  // iOS markiert erst, wenn die Tastatur steht → zweimal versuchen.
+  $('adresse').addEventListener('focus', function () {
+    var f = this;
+    function alles() { try { f.select(); f.setSelectionRange(0, f.value.length); } catch (e) {} }
+    setTimeout(alles, 0); setTimeout(alles, 350);
+  });
+
+  $('andere').addEventListener('click', function () { abgebrochen = true; zeigeFormular(''); $('adresse').focus(); });
+  // Lange auf das Logo drücken (0,6 s): jederzeit zur Adresseingabe, auch während automatisch verbunden wird.
+  (function () {
+    var t = null, logo = document.querySelector('.logo');
+    function los() { clearTimeout(t); t = null; }
+    logo.addEventListener('touchstart', function () { los(); t = setTimeout(function () { abgebrochen = true; zeigeFormular(''); }, 600); }, { passive: true });
+    ['touchend', 'touchmove', 'touchcancel'].forEach(function (n) { logo.addEventListener(n, los, { passive: true }); });
+    logo.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+  })();
+
+  // Automatisch verbinden, sofort und ohne Wartezeit: gemerkte Adresse und Wegweiser (Gist, max. 2,5 s) laufen PARALLEL,
+  // die erste erreichbare Adresse gewinnt. Erst wenn beide nichts liefern, die eingebaute (STANDARD), sonst das Formular.
+  // „Andere Adresse“ und der Langdruck aufs Logo gehen, solange die Startseite sichtbar ist.
+  var gespeichert = lies();
+  var manuell = /[?&]manuell=1/.test(location.search);
+
+  // Aktuelle Adresse aus dem Wegweiser holen (2,5 s Zeitlimit, Fehler → ohne Wegweiser weiter).
+  function wegweiser() {
+    var zeit = new Promise(function (ok) { setTimeout(function () { ok(null); }, 2500); });
+    var url = WEGWEISER + '?t=' + Date.now();
+    var http = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorHttp;
+    var holen = (http && http.request)
+      ? http.request({ url: url, method: 'GET', connectTimeout: 2500, readTimeout: 2500, responseType: 'text' })
+          .then(function (r) { return r && r.status === 200 ? (typeof r.data === 'string' ? JSON.parse(r.data) : r.data) : null; })
+      : fetch(url, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; });
+    return Promise.race([holen.then(function (j) { return j && j.demo ? normiere(j.demo) : null; }, function () { return null; }), zeit]);
+  }
+
+  if (!manuell) {
+    $('auto').hidden = false;
+    $('auto-adresse').textContent = 'suche mitano. …';
+    var fertig = false, offen = 0, wegFertig = false, geprueft = {};
+    var versuche = function (a) {
+      if (!a || fertig || abgebrochen || geprueft[a]) return;
+      try { if (!ERLAUBT.test(new URL(a).hostname)) return; } catch (e) { return; }
+      geprueft[a] = true; offen++;
+      erreichbar(a).then(function (ok) {
+        offen--;
+        if (fertig || abgebrochen) return;
+        if (ok) { fertig = true; merke(a); $('auto-adresse').textContent = a.replace(/^https?:\/\//, ''); verbinde(a); return; }
+        pruefeEnde();
+      });
+    };
+    var pruefeEnde = function () {
+      if (fertig || abgebrochen || !wegFertig || offen > 0) return;
+      if (!geprueft[STANDARD]) { versuche(STANDARD); return; }
+      zeigeFormular('Server nicht erreichbar – läuft der Mac und der Tunnel?');
+    };
+    versuche(gespeichert);
+    wegweiser().then(function (aktuell) { wegFertig = true; versuche(aktuell); pruefeEnde(); });
+  } else {
+    // „Server wechseln“ aus den Einstellungen: ohne Fehlermeldung. Sonst kam die Seite nicht (fehler.html).
+    var wechseln = /[?&]wechseln=1/.test(location.search);
+    zeigeFormular(wechseln ? '' : 'Die Seite konnte nicht geladen werden – läuft der Mac und der Tunnel?');
+    $('auto-suchen').hidden = false;
+    $('auto-suchen').addEventListener('click', function () { location.replace('index.html'); });
+  }
+})();
+</script>
+</body>
+</html>

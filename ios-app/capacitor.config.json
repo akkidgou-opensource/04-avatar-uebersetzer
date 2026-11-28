@@ -1,0 +1,16 @@
+{
+  "appId": "de.akki.kumpel.coso",
+  "appName": "mitano.",
+  "webDir": "www",
+  "backgroundColor": "#fbf6f1",
+  "server": {
+    "allowNavigation": [
+      "*.trycloudflare.com",
+      "*.local"
+    ],
+    "errorPath": "fehler.html"
+  },
+  "ios": {
+    "contentInset": "never"
+  }
+}

@@ -1,0 +1,115 @@
+diff --git a/node_modules/@capgo/capacitor-speech-recognition/.swiftpm/xcode/xcuserdata/david.baur.xcuserdatad/xcschemes/xcschememanagement.plist b/node_modules/@capgo/capacitor-speech-recognition/.swiftpm/xcode/xcuserdata/david.baur.xcuserdatad/xcschemes/xcschememanagement.plist
+new file mode 100644
+index 0000000..43abec5
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-speech-recognition/.swiftpm/xcode/xcuserdata/david.baur.xcuserdatad/xcschemes/xcschememanagement.plist
+@@ -0,0 +1,14 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
++<plist version="1.0">
++<dict>
++	<key>SchemeUserState</key>
++	<dict>
++		<key>CapgoCapacitorSpeechRecognition.xcscheme_^#shared#^_</key>
++		<dict>
++			<key>orderHint</key>
++			<integer>1</integer>
++		</dict>
++	</dict>
++</dict>
++</plist>
+diff --git a/node_modules/@capgo/capacitor-speech-recognition/ios/Sources/SpeechRecognitionPlugin/SpeechAnalyzerRecognitionSession.swift b/node_modules/@capgo/capacitor-speech-recognition/ios/Sources/SpeechRecognitionPlugin/SpeechAnalyzerRecognitionSession.swift
+index 7855a94..1997a0f 100644
+--- a/node_modules/@capgo/capacitor-speech-recognition/ios/Sources/SpeechRecognitionPlugin/SpeechAnalyzerRecognitionSession.swift
++++ b/node_modules/@capgo/capacitor-speech-recognition/ios/Sources/SpeechRecognitionPlugin/SpeechAnalyzerRecognitionSession.swift
+@@ -294,9 +294,8 @@ final class SpeechAnalyzerRecognitionSession {
+     }
+ 
+     private func configureAudioSession() throws {
+-        let session = AVAudioSession.sharedInstance()
+-        try session.setCategory(.playAndRecord, mode: .spokenAudio, options: [.duckOthers, .allowBluetoothHFP])
+-        try session.setActive(true, options: .notifyOthersOnDeactivation)
++        // mitano.-Patch: gemeinsame, stabile Sitzung statt .spokenAudio/.duckOthers pro Start.
++        try MitanoAudioSession.ensure()
+         isAudioSessionActive = true
+     }
+ 
+@@ -427,12 +426,7 @@ final class SpeechAnalyzerRecognitionSession {
+             return
+         }
+ 
+-        do {
+-            try AVAudioSession.sharedInstance().setActive(false, options: [.notifyOthersOnDeactivation])
+-        } catch {
+-            // Ignore deactivation failures during cleanup.
+-        }
+-
++        // mitano.-Patch: NIE setActive(false) – die WebRTC-Wiedergabe läuft in derselben Sitzung.
+         isAudioSessionActive = false
+     }
+ }
+diff --git a/node_modules/@capgo/capacitor-speech-recognition/ios/Sources/SpeechRecognitionPlugin/SpeechRecognitionPlugin.swift b/node_modules/@capgo/capacitor-speech-recognition/ios/Sources/SpeechRecognitionPlugin/SpeechRecognitionPlugin.swift
+index bf22385..1eb3d49 100644
+--- a/node_modules/@capgo/capacitor-speech-recognition/ios/Sources/SpeechRecognitionPlugin/SpeechRecognitionPlugin.swift
++++ b/node_modules/@capgo/capacitor-speech-recognition/ios/Sources/SpeechRecognitionPlugin/SpeechRecognitionPlugin.swift
+@@ -103,6 +103,8 @@ public final class SpeechRecognitionPlugin: CAPPlugin, CAPBridgedPlugin {
+     }
+ 
+     @objc func start(_ call: CAPPluginCall) {
++        // mitano.-Patch: Modus der Audio-Sitzung wählbar ("default" | "voicechat"), ohne neuen App-Build vergleichbar.
++        MitanoAudioSession.requestedMode = (call.getString("audioMode") == "voicechat") ? .voiceChat : .default
+         if activeSessionId != nil || isRecognitionActive {
+             call.reject("Speech recognition is already running.")
+             return
+@@ -595,10 +597,8 @@ public final class SpeechRecognitionPlugin: CAPPlugin, CAPBridgedPlugin {
+     }
+ 
+     private func configureAudioSession() throws {
+-        let session = AVAudioSession.sharedInstance()
+-        try session.setCategory(.playAndRecord, options: [.defaultToSpeaker, .duckOthers])
+-        try session.setMode(.measurement)
+-        try session.setActive(true, options: .notifyOthersOnDeactivation)
++        // mitano.-Patch: Audio-Sitzung EINMAL konfigurieren und nicht pro Start umschalten (sonst knackt die WebRTC-Wiedergabe).
++        try MitanoAudioSession.ensure()
+         isLegacyAudioSessionActive = true
+     }
+ 
+@@ -608,12 +608,7 @@ public final class SpeechRecognitionPlugin: CAPPlugin, CAPBridgedPlugin {
+             return
+         }
+ 
+-        do {
+-            try AVAudioSession.sharedInstance().setActive(false, options: [.notifyOthersOnDeactivation])
+-        } catch {
+-            // Ignore deactivation failures during cleanup.
+-        }
+-
++        // mitano.-Patch: NIE setActive(false) – WKWebView/WebRTC spielt in derselben Sitzung weiter.
+         isLegacyAudioSessionActive = false
+     }
+ 
+@@ -1028,3 +1023,24 @@ private struct RecognitionOptions {
+     /// iOS 26+ SpeechAnalyzer path only: use `DictationTranscriber` instead of `SpeechTranscriber`.
+     let useDictationTranscriber: Bool
+ }
++
++
++/// mitano.-Patch: gemeinsame, stabile Audio-Sitzung für Spracherkennung + WKWebView/WebRTC-Wiedergabe.
++/// Kategorie playAndRecord mit Lautsprecher, Bluetooth-A2DP und mixWithOthers; Modus nur bei Bedarf ändern;
++/// setActive(true) nur einmal pro App-Lauf; niemals deaktivieren.
++enum MitanoAudioSession {
++    static var requestedMode: AVAudioSession.Mode = .default
++    private static var aktiviert = false
++
++    static func ensure() throws {
++        let session = AVAudioSession.sharedInstance()
++        let options: AVAudioSession.CategoryOptions = [.defaultToSpeaker, .allowBluetoothA2DP, .mixWithOthers]
++        if session.category != .playAndRecord || session.mode != requestedMode || !session.categoryOptions.contains(.defaultToSpeaker) {
++            try session.setCategory(.playAndRecord, mode: requestedMode, options: options)
++        }
++        if !aktiviert {
++            try session.setActive(true)
++            aktiviert = true
++        }
++    }
++}

@@ -3,3 +3,15 @@ node_modules
 _sicherung
 .DS_Store
 lokal
+
+# iOS-App (Capacitor)
+ios-app/node_modules
+ios-app/build
+ios-app/ios/App/build
+ios-app/ios/DerivedData
+ios-app/ios/App/App/public
+xcuserdata/
+
+# Sicherungen der Einstellungen (enthalten Schlüssel)
+.env.*
+!.env.example

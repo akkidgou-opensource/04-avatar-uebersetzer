@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>mitano. Meine Unterlagen</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#A8412C}a:hover{color:#4A1E14}
+</style>
+</helmet>
+<div style="width: 390px; height: 920px; box-sizing: border-box; padding: 52px 20px 0; display: flex; flex-direction: column; gap: 16px; overflow: hidden; background: radial-gradient(circle at 12% 6%, rgba(78, 191, 239, 0.30) 0%, rgba(78, 191, 239, 0) 42%), radial-gradient(circle at 95% 38%, rgba(247, 167, 146, 0.50) 0%, rgba(247, 167, 146, 0) 48%), radial-gradient(circle at 5% 88%, rgba(255, 210, 190, 0.95) 0%, rgba(255, 210, 190, 0) 55%), linear-gradient(170deg, #F4F8FC 0%, #FFFFFF 40%, #FFF3EC 100%); font-family: Inter, system-ui, sans-serif; color: #0A0A0A">
+
+<div style="display: flex; flex-direction: row; align-items: center; gap: 12px">
+<button type="button" aria-label="Zurück" style="flex: none; width: 44px; height: 44px; border-radius: 50%; background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 8px 24px rgba(168, 65, 44, 0.10); display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4A1E14" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
+</button>
+<h1 style="flex: 1; margin: 0 56px 0 0; text-align: center; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; color: #0A0A0A">Meine Unterlagen</h1>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 24px; background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 8px 24px rgba(168, 65, 44, 0.10)">
+<button type="button" style="height: 40px; border: none; border-radius: 20px; background: transparent; font-family: inherit; font-size: 15px; font-weight: 500; color: #6B5A54; cursor: pointer">Zeitstrahl</button>
+<button type="button" style="height: 40px; border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 20px; background: rgba(255, 255, 255, 0.85); box-shadow: 0 2px 8px rgba(168, 65, 44, 0.12); font-family: inherit; font-size: 15px; font-weight: 600; color: #0A0A0A; cursor: pointer">Dokumente</button>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<button type="button" style="height: 50px; border-radius: 25px; background: rgba(240, 154, 132, 0.32); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 8px 24px rgba(168, 65, 44, 0.14); display: flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; font-size: 15px; font-weight: 600; color: #4A1E14; cursor: pointer">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A1E14" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M7 12h10"></path></svg>
+Scannen
+</button>
+<button type="button" style="height: 50px; border-radius: 25px; background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 8px 24px rgba(168, 65, 44, 0.10); display: flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; font-size: 15px; font-weight: 600; color: #4A1E14; cursor: pointer">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4A1E14" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5M12 17v-6M9.5 13.5L12 11l2.5 2.5"></path></svg>
+<span>Neue Datei hochladen</span>
+</button>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 18px">
+<sc-for list="{{ groups }}" as="group" hint-placeholder-count="2">
+<section style="display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; flex-direction: row; align-items: baseline; justify-content: space-between; padding: 0 6px">
+<h2 style="margin: 0; font-size: 15px; font-weight: 700; color: #0A0A0A">{{ group.title }}</h2>
+<span style="font-size: 13px; color: #6B5A54">{{ group.count }}</span>
+</div>
+<div style="display: flex; flex-direction: column; padding: 6px; border-radius: 24px; background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 8px 24px rgba(168, 65, 44, 0.10)">
+<sc-for list="{{ group.docs }}" as="doc" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column">
+<div style="display: flex; flex-direction: row; align-items: center; gap: 12px; padding: 8px 4px 8px 12px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A8412C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5M9 13h6M9 17h4"></path></svg>
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 16px; font-weight: 600; color: #0A0A0A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ doc.title }}</span>
+<span style="font-size: 13px; color: #6B5A54">{{ doc.meta }}</span>
+</div>
+<button type="button" aria-label="Bearbeiten" style="flex: none; width: 44px; height: 44px; border: none; border-radius: 50%; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6B5A54" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4z"></path></svg>
+</button>
+<button type="button" aria-label="Löschen" style="flex: none; width: 44px; height: 44px; border: none; border-radius: 50%; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A8412C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"></path></svg>
+</button>
+</div>
+<sc-if value="{{ doc.notLast }}" hint-placeholder-val="{{ true }}">
+<div style="height: 1px; margin: 0 12px 0 44px; background: rgba(107, 90, 84, 0.15)"></div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-for>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":920}}'>
+class Component extends DCLogic {
+renderVals() {
+return {
+groups: [
+{ title: 'Arztbriefe', count: '5 Dokumente', docs: [
+{ title: 'Arztbrief', meta: '25.8.2027 · Arztbrief', notLast: true },
+{ title: 'Arztbrief', meta: '12.9.2026 · Arztbrief', notLast: true },
+{ title: 'Arztbrief', meta: '6.2.2025 · Arztbrief', notLast: true },
+{ title: 'Arztbrief', meta: '25.2.2024 · Arztbrief', notLast: true },
+{ title: 'Arztbrief', meta: '9.10.2023 · Arztbrief', notLast: false }
+] },
+{ title: 'Entlassungsunterlagen', count: '2 Dokumente', docs: [
+{ title: 'Entlassungsbrief', meta: '10.11.2026 · Arztbrief', notLast: true },
+{ title: 'Entlassungsbericht', meta: '24.11.2025 · Arztbrief', notLast: false }
+] }
+]
+};
+}
+}
+</script>
+</body>
+</html>

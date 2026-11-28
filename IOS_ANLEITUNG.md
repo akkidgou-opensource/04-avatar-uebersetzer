@@ -38,11 +38,48 @@ Der Simulator ist der einfachste Start, ohne iPhone und ohne Kabel. Das Projekt 
 3. In Xcode das iPhone oben als Ziel wählen.
 4. Beim ersten Start am iPhone: **Einstellungen → Allgemein → VPN & Geräteverwaltung** → eigene Apple-ID → „Vertrauen“.
 
-## Schritt 6 · iOS-Projekt anlegen (macht Claude Code)
+## Schritt 6 · iOS-Projekt anlegen (erledigt – liegt in `ios-app/`)
 Erst wenn Schritt 1 bis 3 erledigt sind, diesen Prompt in Claude Code einfügen:
 ```
 Lies CLAUDE.md und IOS_ANLEITUNG.md. Richte Capacitor ein, sodass public/index.html als iOS-App läuft. Sag mir vorher kurz, was du installierst, und warte auf meine Freigabe. Danach öffne das Projekt in Xcode und erkläre mir in drei Sätzen, wie ich es im Simulator starte.
 ```
+
+## So startest du die Mitano.-App auf deinem iPhone
+Die App „Mitano.“ ist schon angelegt (Ordner `ios-app/`). Sie bringt nur eine kleine Startseite mit und holt die eigentliche Oberfläche **vom Mac** – über einen **Tunnel** ins Internet. So klappt es in jedem Netz (auch in Klinik- oder Gäste-WLANs, die Geräte voneinander trennen) und auch über Mobilfunk.
+
+### Tunnel starten (jedes Mal vor der Demo)
+1. **Server am Mac starten:** Im Projektordner `node --env-file=.env server.js`.
+2. **Zweites Terminal-Fenster öffnen** und eingeben:
+   ```
+   cloudflared tunnel --no-autoupdate --url http://localhost:3000
+   ```
+   (Einmalig vorher installieren: `brew install cloudflared`.)
+3. In der Ausgabe steht eine Adresse wie `https://irgendwas-irgendwas.trycloudflare.com`. **Diese Adresse brauchst du in der App.** Fenster offen lassen – schließt du es, ist der Tunnel weg.
+4. **Achtung:** Bei jedem Neustart des Tunnels gibt es eine **neue Adresse**. Dann in der App neu eintragen (siehe unten).
+
+### App am iPhone benutzen
+- Beim Start zeigt die App kurz „Ich verbinde mit dem Server …“ und öffnet dann Mitano. mit der zuletzt benutzten Adresse.
+- **Neue Adresse eintragen:** App starten und in diesen ersten Sekunden auf **„Andere Adresse“** tippen – oder warten, bis „Server nicht erreichbar“ erscheint. Ins Feld tippen (der alte Text wird markiert), neue Adresse einfügen, **Verbinden**. Tipp: Adresse am Mac kopieren und per AirDrop/Notizen aufs iPhone schicken.
+- Ganz neu starten: App am iPhone wegwischen (vom unteren Rand hochziehen, App nach oben schieben) und neu öffnen.
+
+### App aufs iPhone bringen (nur nötig, wenn sie fehlt oder nach 7 Tagen)
+1. **Xcode öffnen:** Im Ordner `ios-app` den Befehl `npx cap open ios` eingeben.
+2. **Signieren (einmalig):** Links das blaue Symbol **App** → unter TARGETS **App** → Reiter **Signing & Capabilities** → Haken bei **Automatically manage signing** → bei **Team** die eigene Apple-ID („Personal Team“) wählen.
+3. **Starten:** iPhone per Kabel anschließen und entsperren, oben **„David's Phone“** (bzw. dein iPhone) wählen, auf **▶** klicken.
+4. **Am iPhone (nur beim ersten Mal):** Entwicklermodus muss an sein (Einstellungen → Datenschutz & Sicherheit → Entwicklermodus). Danach Einstellungen → Allgemein → **VPN & Geräteverwaltung** → eigene Apple-ID → **Vertrauen**.
+5. **Rechte erlauben:** Beim ersten Benutzen fragt die App nach **Mikrofon**, **Spracherkennung** und **Kamera** → jeweils **Erlauben**. Die Spracherkennung läuft über Apple (nicht DSGVO-konform) – nur Testdaten verwenden.
+
+Mit einer kostenlosen Apple-ID läuft die App 7 Tage, danach in Xcode einfach wieder ▶ drücken.
+
+### Präsentieren
+iPhone per Kabel am Mac lassen, am Mac **QuickTime Player** öffnen → **Ablage → Neue Video-Aufnahme** → beim Pfeil neben dem roten Knopf das iPhone als Kamera wählen. Jetzt ist der iPhone-Bildschirm am Mac (und am Beamer) zu sehen.
+
+### Wenn es hakt
+| Problem | Lösung |
+|---|---|
+| „Server nicht erreichbar – läuft der Mac und der Tunnel?“ | Server und Tunnel am Mac laufen lassen, die **aktuelle** Tunnel-Adresse eintragen |
+| „Diese Adresse ist in der App nicht freigegeben“ | Nur Adressen mit `…trycloudflare.com` (oder `….local` im selben Netz) sind erlaubt |
+| Weiße Seite | App wegwischen und neu öffnen |
 
 ## Wichtig für die Sicherheit
 Der API-Schlüssel darf **nie in die App**. Die App ruft nur unseren `server.js` auf, und der spricht mit der KI. Das heißt:
@@ -55,5 +92,5 @@ Der API-Schlüssel darf **nie in die App**. Die App ruft nur unseren `server.js`
 |---|---|
 | `xcodebuild` meldet „requires Xcode“ | Schritt 2 wiederholen |
 | „Signing for … requires a development team“ | In Xcode beim Projekt unter **Signing & Capabilities** die eigene Apple-ID als Team wählen |
-| Mikrofon oder Kamera funktioniert nicht | In der App-Einstellung (Info.plist) braucht es einen Erklärtext, Claude Code ergänzt ihn auf Anfrage |
+| Mikrofon oder Spracheingabe funktioniert nicht | Am iPhone: Einstellungen → Apps → Mitano. → Mikrofon und Spracherkennung erlauben |
 | Sprachausgabe klingt schlecht | Am iPhone unter **Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen** bessere Stimmen laden |

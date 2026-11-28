@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lippensync-Messung</title>
+<style>
+  body { font: 14px system-ui, sans-serif; margin: 16px; background: #f6f2ea; color: #222; }
+  video { width: 320px; background: #000; vertical-align: top; }
+  canvas { border: 1px solid #999; vertical-align: top; }
+  pre { background: #fff; padding: 8px; max-height: 300px; overflow: auto; }
+</style>
+</head>
+<body>
+<h1>Lippensync-Messung (nur Test, nicht Teil der App)</h1>
+<p>Misst pro Videobild die Bildänderung in einem Raster (16×16 Felder) und gleichzeitig den Tonpegel.
+  Aufruf über das Testskript (Chrome headless) mit <code>window.lauf({...})</code>.</p>
+<div id="buehne"></div>
+<canvas id="mess" width="128" height="128"></canvas>
+<pre id="log"></pre>
+<script src="/vendor/livekit-client.umd.min.js"></script>
+<script>
+'use strict';
+const LK = window.LivekitClient;
+const logEl = document.getElementById('log');
+const log = (...a) => { logEl.textContent += a.join(' ') + '\n'; };
+const warte = (ms) => new Promise((r) => setTimeout(r, ms));
+const N = 128, RASTER = 16, ZELLE = N / RASTER;
+
+// SDP-Trick der App (gleiche Stream-ID für Ton und Bild → Sync-Gruppe im Browser)
+let sdpSyncAn = false;
+function sdpSync() {
+  if (sdpSyncAn) return; sdpSyncAn = true;
+  const orig = RTCPeerConnection.prototype.setRemoteDescription;
+  RTCPeerConnection.prototype.setRemoteDescription = function (b, ...r) {
+    if (b && typeof b.sdp === 'string' && b.sdp.includes('msid:PA_')) {
+      b = { type: b.type, sdp: b.sdp.replace(/msid:(PA_[A-Za-z0-9]+)\|TR_[A-Za-z0-9]+ /g, 'msid:$1|$1 ') };
+      window.__sdpErsetzt = (window.__sdpErsetzt || 0) + 1;
+    }
+    return orig.call(this, b, ...r);
+  };
+}
+
+window.lauf = async function (o) {
+  // o: { agent, modus: 'app'|'attach', sdpSync, jitterExtraMs (null=aus), befehle:[{nachMs, topic, text}], aufnahmeMs, bilder }
+  const erg = { modus: o.modus, frames: [], ton: [], stats: [], ereignisse: [], bilder: [], fehler: null };
+  const t0 = performance.now();
+  const merke = (n) => erg.ereignisse.length < 600 && erg.ereignisse.push({ t: Math.round(performance.now() - t0), n: String(n).slice(0, 80) });
+  if (o.sdpSync) sdpSync();
+  const s = await (await fetch('/sitzung/' + o.agent, { method: 'POST' })).json();
+  if (!s.id) { erg.fehler = 'sitzung: ' + s.fehler; return erg; }
+  erg.sitzung = s.id;
+  const raum = new LK.Room({ adaptiveStream: false, dynacast: false });
+  const buehne = document.getElementById('buehne'); buehne.innerHTML = '';
+  const video = document.createElement('video'); video.autoplay = true; video.playsInline = true;
+  let hg = null;
+  if (o.modus === 'appexakt') {
+    // Nachbau der App-Bühne: unscharfes Hintergrund-Video (gleicher Strom, stumm) + Leerlauf-Video + Live-Video darüber
+    buehne.style.cssText = 'position:relative;width:340px;height:440px;overflow:hidden;border-radius:24px;background:#ddd';
+    hg = document.createElement('video'); hg.muted = true; hg.autoplay = true; hg.playsInline = true;
+    hg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(24px);transform:scale(1.2)';
+    const ll = document.createElement('video'); ll.muted = true; ll.loop = true; ll.autoplay = true; ll.playsInline = true;
+    if (o.leerlauf) ll.src = o.leerlauf;
+    for (const el of [ll, video]) el.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .5s ease;transform:scale(1.6) translate(0,6%)';
+    video.style.opacity = '0';
+    buehne.append(hg, ll, video);
+    video.addEventListener('playing', () => { video.style.opacity = '1'; merke('live sichtbar'); });
+  } else buehne.appendChild(video);
+  let audioEl = null, tonSpur = null, bildSpur = null;
+  const E = LK.RoomEvent;
+  raum.on(E.TrackSubscribed, (track) => {
+    merke('spur ' + track.kind);
+    if (track.kind === 'video') bildSpur = track; else if (track.kind === 'audio') tonSpur = track;
+    if (o.modus === 'attach') {
+      if (track.kind === 'video') track.attach(video);
+      else { audioEl = track.attach(); buehne.appendChild(audioEl); }
+    } else {
+      const sp = [bildSpur, tonSpur].filter(Boolean).map((t) => t.mediaStreamTrack);
+      const ms = new MediaStream(sp);
+      video.srcObject = ms; video.muted = false;
+      video.play().catch((e) => { merke('play fehler ' + e.name); video.muted = true; video.play().catch(() => {}); });
+      if (hg) { hg.srcObject = ms; hg.play().catch((e) => merke('hg play fehler ' + e.name)); }
+    }
+  });
+  raum.on(E.DataReceived, (d) => { try { const j = JSON.parse(new TextDecoder().decode(d)); merke('data ' + (j.subject || '?')); } catch { merke('data ?'); } });
+  raum.on(E.ParticipantAttributesChanged, (g, teil) => { if (teil !== raum.localParticipant) for (const k of Object.keys(g || {})) merke('attr ' + k + (/state/.test(k) ? '=' + g[k] : '')); });
+  // Diagnose (nur Namen/Zustände, keine Inhalte)
+  raum.on(E.ParticipantConnected, (t) => merke('teilnehmer da ' + (t.identity || '').slice(0, 20)));
+  raum.on(E.TrackPublished, (pub) => merke('veröffentlicht ' + pub.kind + ' ' + (pub.mimeType || '') + ' sub=' + pub.isSubscribed));
+  raum.on(E.TrackSubscriptionFailed, (sid, teil, err) => merke('abo fehlgeschlagen ' + sid + ' ' + (err && err.message || err)));
+  raum.on(E.TrackSubscriptionStatusChanged, (pub, st) => merke('abo-status ' + pub.kind + ' ' + st));
+  raum.on(E.ConnectionStateChanged, (st) => merke('verbindung ' + st));
+  raum.on(E.MediaDevicesError, (e) => merke('mediadevices ' + e.message));
+  raum.on(E.SignalConnected, () => merke('signal ok'));
+  try {
+    LK.setLogLevel('debug');
+    LK.setLogExtension((lvl, msg, ctx) => { if (lvl >= 3 || /ice|subscri|transport|pcManager|connection state|track/i.test(msg)) merke('LK' + lvl + ' ' + msg); });
+  } catch {}
+  const altPC = window.RTCPeerConnection;
+  if (!window.__pcHook) { window.__pcHook = true; window.__pcs = [];
+    window.RTCPeerConnection = function (...a) { const pc = new altPC(...a); window.__pcs.push(pc);
+      pc.addEventListener('connectionstatechange', () => window.__merke && window.__merke('pc ' + window.__pcs.indexOf(pc) + ' ' + pc.connectionState));
+      pc.addEventListener('iceconnectionstatechange', () => window.__merke && window.__merke('ice ' + window.__pcs.indexOf(pc) + ' ' + pc.iceConnectionState));
+      pc.addEventListener('track', (e) => window.__merke && window.__merke('pc-track ' + e.track.kind));
+      return pc; };
+    window.RTCPeerConnection.prototype = altPC.prototype; Object.setPrototypeOf(window.RTCPeerConnection, altPC); }
+  window.__merke = merke;
+  raum.on(E.ActiveSpeakersChanged, (sp) => merke('sprecher ' + sp.filter((x) => x !== raum.localParticipant).length));
+  const notbremse = setTimeout(() => { merke('NOTBREMSE'); raum.disconnect().catch(() => {}); fetch('/sitzung/' + s.id, { method: 'DELETE' }); }, 75000);
+  try {
+    await raum.connect(s.url, s.token);
+    merke('verbunden');
+    for (let i = 0; i < 80 && !(tonSpur && bildSpur); i++) await warte(250);
+    merke('remote: ' + [...raum.remoteParticipants.values()].map((t) => t.identity.slice(0, 12) + ':' + [...t.trackPublications.values()].map((p) => p.kind + '/' + p.isSubscribed + '/' + p.subscriptionStatus).join(',')).join(' '));
+    if (!tonSpur || !bildSpur) throw new Error('spuren fehlen');
+    // Ton messen (eigener Analysepfad, Ton bleibt am Element)
+    const ctx = window.__ctx || new AudioContext(); merke('audio ' + ctx.state); await Promise.race([ctx.resume(), warte(1500)]); merke('audio ' + ctx.state);
+    const quelle = ctx.createMediaStreamSource(new MediaStream([tonSpur.mediaStreamTrack]));
+    const an = ctx.createAnalyser(); an.fftSize = 512; quelle.connect(an);
+    const puf = new Float32Array(an.fftSize);
+    const tonTakt = setInterval(() => {
+      an.getFloatTimeDomainData(puf); let q = 0; for (const x of puf) q += x * x;
+      erg.ton.push([Math.round((performance.now() - t0) * 10) / 10, Math.round(Math.sqrt(q / puf.length) * 10000)]);
+    }, 10);
+    // Bild messen
+    const c = document.getElementById('mess'), g = c.getContext('2d', { willReadFrequently: true });
+    const gross = document.createElement('canvas'); gross.width = 320; gross.height = 320; const gg = gross.getContext('2d');
+    let vorher = null, aufnehmen = true, nr = 0;
+    const proBild = (jetzt, meta) => {
+      if (!aufnehmen) return;
+      g.drawImage(video, 0, 0, N, N);
+      const px = g.getImageData(0, 0, N, N).data;
+      const grau = new Float32Array(N * N);
+      for (let i = 0; i < N * N; i++) grau[i] = 0.299 * px[4 * i] + 0.587 * px[4 * i + 1] + 0.114 * px[4 * i + 2];
+      const zellen = new Array(RASTER * RASTER).fill(0);
+      if (vorher) {
+        for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+          const i = y * N + x; zellen[((y / ZELLE) | 0) * RASTER + ((x / ZELLE) | 0)] += Math.abs(grau[i] - vorher[i]);
+        }
+      }
+      vorher = grau;
+      const t = Math.round((meta.presentationTime - t0) * 10) / 10;
+      erg.frames.push([t, meta.mediaTime, meta.presentedFrames, video.videoWidth, video.videoHeight, zellen.map((z) => Math.round(z / (ZELLE * ZELLE) * 10) / 10)]);
+      if (o.bilder && nr++ % (o.bilderJede || 1) === 0 && erg.bilder.length < (o.bilderMax || 400)) {
+        gg.drawImage(video, 0, 0, 320, 320);
+        erg.bilder.push([t, gross.toDataURL('image/jpeg', 0.75)]);
+      }
+      video.requestVideoFrameCallback(proBild);
+    };
+    video.requestVideoFrameCallback(proBild);
+    // Netzwerk-/Decoder-Werte
+    const statTakt = setInterval(async () => {
+      const zeile = { t: Math.round(performance.now() - t0) };
+      for (const [k, sp] of [['v', bildSpur], ['a', tonSpur]]) {
+        try {
+          (await sp.receiver.getStats()).forEach((r) => {
+            if (r.type === 'inbound-rtp') {
+              zeile[k] = k === 'v'
+                ? { fd: r.framesDecoded, fps: r.framesPerSecond, drop: r.framesDropped, w: r.frameWidth, h: r.frameHeight, jb: r.jitterBufferDelay, jbn: r.jitterBufferEmittedCount, frz: r.freezeCount, kb: Math.round(r.bytesReceived / 1000), codec: r.codecId }
+                : { jb: r.jitterBufferDelay, jbn: r.jitterBufferEmittedCount, sr: r.totalSamplesReceived, conc: r.concealedSamples, lvl: r.audioLevel };
+            }
+            if (r.type === 'codec') zeile['codec_' + k] = (zeile['codec_' + k] || '') + r.mimeType + ' ';
+          });
+        } catch {}
+      }
+      if (o.jitterExtraMs != null && zeile.a && erg.stats.length) {
+        const alt = erg.stats[erg.stats.length - 1].a;
+        if (alt && zeile.a.jbn > alt.jbn) {
+          const tonMs = 1000 * (zeile.a.jb - alt.jb) / (zeile.a.jbn - alt.jbn);
+          const ziel = Math.max(0, Math.min(1500, Math.round(tonMs + o.jitterExtraMs)));
+          try { bildSpur.receiver.jitterBufferTarget = ziel; zeile.ziel = ziel; } catch {}
+        }
+      }
+      erg.stats.push(zeile);
+    }, 500);
+    await warte(o.vorlaufMs ?? 3000);
+    for (const b of o.befehle || []) {
+      const warten = b.nachMs - (performance.now() - t0);
+      if (warten > 0) await warte(warten);
+      merke('sende ' + b.topic);
+      await raum.localParticipant.sendText(b.text, { topic: b.topic });
+    }
+    await warte(o.aufnahmeMs ?? 12000);
+    aufnehmen = false; clearInterval(tonTakt); clearInterval(statTakt);
+    erg.elementPaused = video.paused; erg.hgPaused = hg && hg.paused; erg.videoW = video.videoWidth; erg.elementMuted = video.muted; erg.sdpErsetzt = window.__sdpErsetzt || 0;
+    ctx.close();
+  } catch (e) { erg.fehler = String(e && e.message || e); }
+  finally {
+    raum.disconnect().catch(() => {});
+    await fetch('/sitzung/' + s.id, { method: 'DELETE' }).catch(() => {});
+    clearTimeout(notbremse); merke('sitzung beendet');
+  }
+  return erg;
+};
+// Handbetrieb (z. B. iPhone-Simulator): ?name=...&modus=app&jitter=180&sync=0 → Knopf antippen, Ergebnis geht an den Testserver.
+const q = new URLSearchParams(location.search);
+const info = { ua: navigator.userAgent, jbt: typeof RTCRtpReceiver !== 'undefined' && 'jitterBufferTarget' in RTCRtpReceiver.prototype,
+  pdh: typeof RTCRtpReceiver !== 'undefined' && 'playoutDelayHint' in RTCRtpReceiver.prototype, rvfc: 'requestVideoFrameCallback' in HTMLVideoElement.prototype };
+log(JSON.stringify(info));
+if (q.get('name')) {
+  fetch('/ergebnis/' + q.get('name') + '_info', { method: 'POST', body: JSON.stringify(info) });
+  const k = document.createElement('button'); k.textContent = 'START'; k.style.cssText = 'font-size:40px;padding:30px 60px;display:block;margin:20px 0';
+  document.body.insertBefore(k, document.body.firstChild);
+  k.onclick = async () => {
+    window.__ctx = new AudioContext(); window.__ctx.resume(); k.disabled = true; k.textContent = 'läuft …';
+    const text = 'Hallo, ich bin mitano. Papa, Mama und Oma bauen am Montag ein Boot. Bitte frag mich alles, was du wissen willst. Wir schauen uns deine Unterlagen gemeinsam an, Schritt für Schritt.';
+    const o = { agent: q.get('agent') || 'v2_agt_JFLmlsPR', modus: q.get('modus') || 'app', sdpSync: q.get('sync') === '1',
+      jitterExtraMs: q.get('jitter') ? +q.get('jitter') : null, vorlaufMs: 3000, leerlauf: q.get('leerlauf') || null,
+      befehle: [{ nachMs: 12000, topic: 'did.interrupt', text: '' }, { nachMs: 13000, topic: 'did.speak', text: JSON.stringify({ script: { type: 'text', input: text } }) }],
+      aufnahmeMs: 13000, bilder: true, bilderJede: 2, bilderMax: 300 };
+    const erg = await window.lauf(o); erg.info = info;
+    await fetch('/ergebnis/' + q.get('name'), { method: 'POST', body: JSON.stringify(erg) });
+    k.textContent = 'fertig: ' + (erg.fehler || 'ok') + ' frames ' + erg.frames.length;
+  };
+}
+log('bereit');
+</script>
+</body>
+</html>
