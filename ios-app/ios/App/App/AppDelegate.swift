@@ -1,5 +1,6 @@
 import UIKit
 import Capacitor
+import AVFoundation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -7,7 +8,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // mitano.: Audio-Sitzung wie bei einem Videoanruf über den Lautsprecher (Echo-Unterdrückung für Lautsprecher abgestimmt).
+        MitanoAudio.einrichten()
         return true
     }
 
@@ -26,6 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
+        MitanoAudio.anwenden()
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
 
@@ -40,5 +43,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                           sessionRole: connectingSceneSession.role)
         config.delegateClass = SceneDelegate.self
         return config
+    }
+}
+
+
+/// mitano.: Knacken über den Lautsprecher in der App (Safari war sauber, mit Kopfhörern sauber).
+/// Die App gibt dem iPhone jetzt ausdrücklich den Modus „Videoanruf über Lautsprecher“ vor
+/// (playAndRecord + .videoChat + defaultToSpeaker). Stellt WebKit beim Mikro-Start auf einen anderen Modus um,
+/// wird der Modus höchstens alle 2 s wieder gesetzt (keine Endlosschleife).
+enum MitanoAudio {
+    private static var beobachter: NSObjectProtocol?
+    private static var zuletzt = Date.distantPast
+
+    static func einrichten() {
+        anwenden()
+        beobachter = NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: .main) { _ in
+            let s = AVAudioSession.sharedInstance()
+            if s.category == .playAndRecord && s.mode != .videoChat && Date().timeIntervalSince(zuletzt) > 2 {
+                anwenden()
+            }
+        }
+    }
+
+    static func anwenden() {
+        zuletzt = Date()
+        let s = AVAudioSession.sharedInstance()
+        do {
+            if s.category != .playAndRecord || s.mode != .videoChat || !s.categoryOptions.contains(.defaultToSpeaker) {
+                try s.setCategory(.playAndRecord, mode: .videoChat, options: [.defaultToSpeaker, .allowBluetoothA2DP])
+            }
+            try s.setActive(true)
+        } catch {
+            NSLog("mitano. Audio-Sitzung: %@", String(describing: error))
+        }
     }
 }
