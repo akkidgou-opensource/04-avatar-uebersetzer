@@ -3071,7 +3071,7 @@ function waehleAvatar(a) {
   zeige('gespraech');
   // Ton im Rahmen dieses Klicks freigeben (wichtig für iPhone/Safari).
   avatarTonFreigeben('oeffnen');
-  if (!Erkennung) toast('Spracheingabe ist in diesem Browser nicht verfügbar. Bitte Chrome, Edge oder Safari nutzen – oder unten auf „Schreiben“ tippen.');
+  if (!Erkennung && !IN_APP) toast('Spracheingabe ist in diesem Browser nicht verfügbar. Bitte Chrome, Edge oder Safari nutzen – oder unten auf „Schreiben“ tippen.');
   ladeModus();
   ladeUnterlagen();
   avatarVerbinden(a);
@@ -5087,7 +5087,11 @@ $('stopp').addEventListener('click', () => {
 // Spracherkennung des Browsers (Chrome/Edge: Google-Server, Safari: Apple). Kein Schlüssel nötig.
 // In der iPhone-App (Capacitor) gibt es keine Browser-Spracherkennung. Dort nutzen wir das
 // native Plugin (Apple-Spracherkennung) über eine kleine Hülle mit derselben Schnittstelle.
-const NativSprache = window.Capacitor?.isNativePlatform?.() ? window.Capacitor.Plugins?.SpeechRecognition : null;
+// Demo-Fix (Koordinator 28.11.): In der iPhone-App die Apple-Spracherkennung NICHT benutzen. Ihr Plugin stellt beim ersten
+// Start die iOS-Audio-Sitzung um, und diese Einstellung bleibt dann für das ganze Gespräch → Knacken (Safari ohne Plugin ist sauber).
+// Zuhören läuft im Gespräch ohnehin über die Avatar-Verbindung (D-ID-Transkript, auch „mitano“). Wieder an mit ?plugin=1.
+const IN_APP = !!window.Capacitor?.isNativePlatform?.();
+const NativSprache = (IN_APP && /[?&]plugin=1/.test(location.search)) ? window.Capacitor.Plugins?.SpeechRecognition : null;
 let nativRechte = null;   // Rechte nur einmal pro App-Start anfragen
 // Nur technische Codes an den Server melden (nie erkannter Text), damit Fehler am iPhone sichtbar werden.
 // Geräte-Kennung je Seitenaufruf (Diagnose): g=<4 Zeichen> p=ios|sim|safari|chrome|web (sim: iOS-App mit > 6 Kernen = Mac).
@@ -5274,7 +5278,7 @@ class NativeErkennung {
     if (this.onend) this.onend();
   }
 }
-const Erkennung = NativSprache ? NativeErkennung : (window.SpeechRecognition || window.webkitSpeechRecognition);
+const Erkennung = NativSprache ? NativeErkennung : (IN_APP ? null : (window.SpeechRecognition || window.webkitSpeechRecognition));
 let erkennung = null, hoertZu = false, gespraechLaeuft = false, autoHoerenGeplant = false;
 let hoerenVerworfen = false;
 let verlauf = [];
