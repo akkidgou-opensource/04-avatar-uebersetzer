@@ -6830,8 +6830,10 @@ window.addEventListener('pagehide', () => freihandPause('pagehide'));
   // addListener liefert je nach Capacitor-Version ein Promise oder direkt einen Griff → nie selbst .catch() aufrufen.
   try {
     Promise.resolve(App.addListener('appStateChange', (s) => {
-      appAktiv = !!(s && s.isActive);
-      if (appAktiv) freihandWeiter('aktiv'); else freihandPause('inaktiv');
+      // Demo-Fix 28.11.: „inaktiv“ (Mikro-Anzeige, Kontrollzentrum, Banner) NICHT mehr als Pause werten – das schaltete das
+      // Mikro direkt nach dem Einschalten wieder aus/an (Live-Codes: 'freihand an' → 'pause inaktiv'). Echter Hintergrund = visibilitychange.
+      appAktiv = true;
+      if (s && s.isActive) freihandWeiter('aktiv');
     })).catch(() => {});
   } catch { /* ohne App-Plugin: visibilitychange genügt */ }
 })();
@@ -7022,12 +7024,8 @@ function dashZurueck() {
   schliesseSheets();
   if (typeof tippfeld === 'function') tippfeld(false);
   clearTimeout(dashTrennTimer);
-  if (pc || verbindet) {
-    dashTrennTimer = setTimeout(() => {
-      dashTrennTimer = null;
-      if ($('ansicht-gespraech').hidden && (pc || verbindet)) avatarTrennen();
-    }, DASH_TRENNEN_MS);
-  }
+  // Nutzerwunsch 28.11.: Beim Zurückgehen die Verbindung zu mitano. SOFORT trennen (spart Guthaben, sauberer Neustart).
+  if (pc || verbindet) { sprachDiag('zurueck trennen'); avatarTrennen(); }
   zeigeDashboard();
 }
 
